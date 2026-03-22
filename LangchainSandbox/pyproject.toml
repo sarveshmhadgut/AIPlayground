@@ -1,0 +1,52 @@
+[project]
+name = "langchainsandbox"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "beautifulsoup4",
+    "chromadb",
+    "faiss-cpu",
+    "google-generativeai",
+    "huggingface-hub",
+    "langchain",
+    "langchain-anthropic",
+    "langchain-chroma",
+    "langchain-community",
+    "langchain-core",
+    "langchain-experimental",
+    "langchain-google-genai",
+    "langchain-huggingface",
+    "langchain-openai",
+    "langchain-text-splitters",
+    "numpy",
+    "openai",
+    "pandas",
+    "pydantic",
+    "pypdf",
+    "python-dotenv",
+    "rich",
+    "scikit-learn",
+    "sentence-transformers",
+    "streamlit",
+    "termcolor",
+    "tiktoken",
+    "youtube-transcript-api",
+]
+
+[tool.uv.workspace]
+members = [
+    ".",
+]
+
+[tool.uv.sources]
+langchainsandbox = { workspace = true, editable = true }
+
+[dependency-groups]
+dev = [
+    "langchainsandbox",
+]
+
+[tool.ruff]
+ignore = ["I001", "SIM117", "BLE001", "UP006", "UP035"]

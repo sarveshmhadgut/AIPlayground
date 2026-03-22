@@ -1,0 +1,154 @@
+    <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+
+    /* Safely apply custom font */
+    html, body, p, div, span, h1, h2, h3, h4, h5, h6, input, button, textarea, a {
+        font-family: 'Satoshi', sans-serif;
+    }
+
+    /* Force Streamlit icons back to native material-symbols to fix text breakage */
+    .material-symbols-rounded, .material-icons, [class*="icon"] {
+        font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
+    }
+
+    /* Hide Streamlit elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+
+    /* Main Block */
+    .block-container {
+        max-width: 900px !important;
+        padding-top: 3rem !important;
+        padding-bottom: 1rem;
+    }
+
+    /* Elegant Title */
+    h1 {
+        text-align: center !important;
+        color: #FE5F5F !important;
+        font-weight: 800 !important;
+        font-size: 3rem !important;
+        line-height: 1.6 !important;
+        margin-top: 1rem !important;
+        padding-top: 1rem !important;
+        overflow: visible !important;
+    }
+
+
+    /* Video Banner */
+    a.video-banner-link {
+        text-decoration: none;
+        display: block;
+        margin-bottom: 30px;
+        transition: transform 0.2s ease;
+    }
+    a.video-banner-link:hover {
+        transform: scale(1.02);
+    }
+    .video-banner-container {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 220px;
+        display: flex;
+        align-items: flex-end;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .video-banner-bg {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-size: cover;
+        background-position: center;
+        filter: grayscale(100%) brightness(40%);
+        z-index: 1;
+        transition: filter 0.3s ease;
+    }
+    .video-banner-bg:hover {
+        filter: grayscale(80%) brightness(50%);
+    }
+    .video-banner-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding: 20px 25px;
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        color: white;
+    }
+    .video-banner-content h3 {
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-shadow: 0px 2px 4px rgba(0,0,0,0.8);
+        color: white;
+    }
+
+    /* Custom Button */
+    .stButton>button {
+        background-color: #FE5F5F;
+        color: black !important;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px #FE5F5F44;
+        background-color: #FE5F5F;
+        color: black !important;
+    }
+
+    /* Center Sidebar Text (Header & Input) */
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] input {
+        text-align: center !important;
+    }
+
+    /* Hide chat avatar symbols completely */
+    div[data-testid*="Avatar"],
+    div[data-testid*="stChatMessageAvatar"],
+    .stChatAvatar {
+        display: none !important;
+    }
+
+    /* Force Transparent Wrapper Backgrounds */
+    div[data-testid="stChatMessage"] {
+        background-color: transparent !important;
+    }
+
+    /* Make Message Bubbles Compact */
+    div[data-testid="stChatMessageContent"] {
+        flex: 0 1 auto !important;
+        width: fit-content !important;
+        max-width: 80% !important;
+        color: black !important;
+        border-radius: 18px !important;
+        padding: 10px 16px !important;
+        margin: 0 !important;
+    }
+
+    div[data-testid="stChatMessageContent"] * {
+        color: black !important;
+        margin-bottom: 0;
+    }
+
+    /* AI Message Bubble (Left, #171717, White Text) */
+    div[data-testid="stChatMessage"]:not(:has(.user-message)) div[data-testid="stChatMessageContent"] {
+        background-color: #171717 !important;
+        color: white !important;
+    }
+    div[data-testid="stChatMessage"]:not(:has(.user-message)) div[data-testid="stChatMessageContent"] * {
+        color: white !important;
+    }
+
+    /* Human Message Bubble (Right, #FE8686) */
+    div[data-testid="stChatMessage"]:has(.user-message) {
+        flex-direction: row-reverse;
+        justify-content: flex-start;
+    }
+    div[data-testid="stChatMessage"]:has(.user-message) div[data-testid="stChatMessageContent"] {
+        background-color: #FE8686 !important;
+    }
+    </style>

@@ -1,0 +1,29 @@
+import sys
+import logging
+from typing import Any
+
+
+def error_message_details(error: Exception, error_details: Any) -> str:
+    _, _, exec_tb = error_details.exc_info()
+
+    if exec_tb is not None:
+        file_name: str = exec_tb.tb_frame.f_code.co_filename
+        line_number: int = exec_tb.tb_lineno
+        error_message: str = (
+            f"Error occurred in python script: [{file_name}] at line number [{line_number}: {str(error)}]"
+        )
+    else:
+        # Fallback when no traceback is available
+        error_message: str = f"Error occurred: {str(error)}"
+
+    logging.error(error_message)
+    return error_message
+
+
+class MyException(Exception):
+    def __init__(self, error_message: str, error_details: Any) -> None:
+        super().__init__(error_message)
+        self.error_message: str = error_message_details(error_message, error_details)
+
+    def __str__(self) -> str:
+        return self.error_message
