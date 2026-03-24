@@ -26,6 +26,7 @@ dependencies = [
     "pydantic",
     "pypdf",
     "python-dotenv",
+    "requests>=2.32.5",
     "rich",
     "scikit-learn",
     "sentence-transformers",
@@ -49,4 +50,5 @@ dev = [
 ]
 
 [tool.ruff]
-ignore = ["I001", "SIM117", "BLE001", "UP006", "UP035"]
+ignore = ["I001", "SIM117", "BLE001", "UP006", "UP035", "F401"]
+line-length = 120
