@@ -1,7 +1,7 @@
 [project]
 name = "langchainsandbox"
 version = "0.1.0"
-description = "Add your description here"
+description = "This is a playground repo where I test out LangChain, LLMs (mainly Gemini), and RAG setups"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [
@@ -11,7 +11,6 @@ dependencies = [
     "google-generativeai",
     "huggingface-hub",
     "langchain",
-    "langchain-anthropic",
     "langchain-chroma",
     "langchain-community",
     "langchain-core",
@@ -26,7 +25,7 @@ dependencies = [
     "pydantic",
     "pypdf",
     "python-dotenv",
-    "requests>=2.32.5",
+    "requests",
     "rich",
     "scikit-learn",
     "sentence-transformers",
@@ -41,14 +40,10 @@ members = [
     ".",
 ]
 
-[tool.uv.sources]
-langchainsandbox = { workspace = true, editable = true }
-
 [dependency-groups]
 dev = [
     "langchainsandbox",
 ]
 
 [tool.ruff]
-ignore = ["I001", "SIM117", "BLE001", "UP006", "UP035", "F401"]
-line-length = 120
+ignore = ["I001", "SIM117", "BLE001", "UP006", "UP035", "F401", "F841"]

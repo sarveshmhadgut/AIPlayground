@@ -1,69 +1,21 @@
-# LangChain Sandbox
+# AI Playground
 
-This is a playground repo where I test out LangChain, LLMs (mainly Gemini), and RAG setups.
+A playground repository containing sandboxes for exploring Large Language Models (LLMs), AI orchestration frameworks, and advanced workflows.
 
+## Subprojects
 
-## Directory Structure
+- **[LangChain Sandbox](./LangchainSandbox)**: A collection of scripts and apps exploring LangChain core components, retrievers, document loaders, memory systems, and RAG setups.
+- **[LangGraph Sandbox](./LanggraphSandbox)**: Notebooks and code demonstrating stateful multi-agent orchestrations, sequential/parallel workflows, and prompt chaining.
 
-```text
-LangchainSandbox/
-├── Chains/               # Execution paths and complex chains
-├── DocumentLoaders/      # Parsers for PDFs, text, and web
-├── GoofyChatbot/         # Persona testing and memory handling
-├── Models/               # Boilerplate for foundation models
-├── PromptsNMessages/     # Prompt templates and chat orchestration
-├── Retrievers/           # Finding data using Vector DBs
-├── TextSplitters/        # Chunking strategies for embeddings
-├── VectorStores/         # Local DB setups (Chroma, FAISS)
-└── TLDRify/              # It’s giving... I didn’t watch the video but I know everything
-```
+## Setup & Prerequisites
 
-## Setup Instructions
+This repository uses [uv](https://github.com/astral-sh/uv) to manage Python environments and dependencies.
 
-### 1. Prerequisites
+1. Install `uv`:
+   ```bash
+   pip install uv
+   ```
 
-Make sure you have Python 3.11 or higher installed. This project uses `uv` to handle dependencies, which you'll need to install if you haven't already:
-
-```bash
-pip install uv
-```
-
-### 2. Installation
-
-Clone the repository and install the required dependencies:
-
-```bash
-git clone https://github.com/yourusername/AIPlayground.git
-cd AIPlayground/LangchainSandbox
-
-uv sync
-```
-
-If you prefer `pip`, you can also do:
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Environment Variables
-
-Create a `.env` file in the `LangchainSandbox` directory and add your API keys.
-
-```env
-GOOGLE_API_KEY="your-google-gemini-api-key"
-# Add other keys depending on the models you use:
-# OPENAI_API_KEY="your-openai-api-key"
-# ANTHROPIC_API_KEY="your-anthropic-api-key"
-# HUGGINGFACE_API_KEY="your-hf-token"
-```
-
-### 4. Running the YouTube RAG App
-
-To spin up the interactive Streamlit app for YouTube RAG:
-
-```bash
-cd YT_RAG
-uv run streamlit run app.py
-```
-## Contributing
-
-This is mainly a personal sandbox project, but feel free to open a PR or issue if you have suggestions or find bugs, or if there's an interesting pattern you'd like to share.
+2. Each sandbox is self-contained. Navigate to the sandbox directory you want to run and follow the setup instructions there:
+   - For LangChain: `cd LangchainSandbox`
+   - For LangGraph: `cd LanggraphSandbox`

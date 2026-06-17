@@ -1,0 +1,14 @@
+[project]
+name = "langgraphsandbox"
+version = "0.1.0"
+description = "This is a playground repo where I test out Langgraph, LLMs (mainly Gemini), and RAG setups"
+readme = "README.md"
+requires-python = ">=3.11, <=3.13"
+dependencies = [
+    "langgraph",
+    "langchain",
+    "langchain-google-genai",
+    "pydantic",
+    "python-dotenv",
+    "rich",
+]
