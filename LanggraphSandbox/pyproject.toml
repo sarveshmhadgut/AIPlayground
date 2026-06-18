@@ -11,4 +11,6 @@ dependencies = [
     "pydantic",
     "python-dotenv",
     "rich",
+    "pandas>=3.0.3",
+    "numpy>=2.4.6",
 ]
