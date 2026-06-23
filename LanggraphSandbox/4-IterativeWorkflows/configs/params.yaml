@@ -1,0 +1,14 @@
+generation_model:
+  model: gemini-2.5-flash
+  temperature: 1.3
+  max_output_tokens: 5000
+
+evaluation_model:
+  model: gemini-3.5-flash
+  temperature: 0.3
+  max_output_tokens: 2000
+
+optimization_model:
+  model: gemini-3.5-flash
+  temperature: 0.3
+  max_output_tokens: 2000

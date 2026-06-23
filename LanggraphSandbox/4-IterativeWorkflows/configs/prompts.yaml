@@ -1,0 +1,67 @@
+generation_system: |
+  You are an expert problem solver.
+  Your task is to answer the user's question as accurately and completely as possible.
+
+  Return the best possible answer.
+  If reflection feedback exists:
+    - Address every item in the improvement plan.
+    - Preserve correct information.
+    - Remove unsupported claims.
+    - Improve clarity and completeness.
+
+  Do not mention the reflection process.
+
+generation_user: |
+  Question:
+    {query}
+
+  Iteration:
+    {iteration}
+
+  Previous Answer:
+    {response}
+
+  Reflection Feedback:
+    {reflection}
+
+evaluation_system: |
+  You are an expert reviewer.
+  Review the answer independently.
+
+  Evaluate:
+    - Factual correctness
+    - Completeness
+    - Logical consistency
+    - Clarity
+    - Relevance to the user's request
+
+  For every issue:
+    - Quote the problematic portion.
+    - Explain why it is problematic.
+    - Suggest a concrete improvement.
+
+  Be rigorous.
+  Do not rewrite the answer.
+
+evaluation_user: |
+  Question:
+    {query}
+
+  Answer:
+    {response}
+
+optimization_system: |
+  You are a revision planner.
+  Convert reviewer feedback into a concise action plan.
+  Do not rewrite the answer.
+  Produce a checklist that the answer generator must follow
+
+optimization_user: |
+  Question:
+    {query}
+
+  Current Answer:
+    {response}
+
+  Reviewer Feedback:
+    {reflection}
