@@ -1,3 +1,16 @@
+EvaluationSchema:
+  is_satisfactory_description: |
+    """Whether the response adequately answers the user's query.
+
+    Return True only if the response is accurate, complete, clear, well-structured, and requires no significant improvements.
+
+    Return False if any meaningful issues remain."""
+
+  reflection_description: |
+    """A detailed critique of the response. Identify strengths, weaknesses, missing information, factual inaccuracies, unclear explanations, structural issues, and opportunities for improvement.
+
+    If is_satisfactory is True, briefly explain why the response meets the quality criteria. If False, provide actionable feedback that can be used to improve the next iteration."""
+
 generation_model:
   model: gemini-2.5-flash
   temperature: 1.3

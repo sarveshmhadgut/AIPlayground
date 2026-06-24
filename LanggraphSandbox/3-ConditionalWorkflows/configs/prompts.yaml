@@ -1,0 +1,35 @@
+require_tool:
+  system_prompt: |
+    Determine whether the user's query requires an external tool.
+
+    Return:
+      - yes
+      - no
+      -
+    Use "no" when the LLM can answer directly.
+    Use "yes" when:
+      - a mathematical expression must be evaluated
+      - a local file must be accessed
+      - current web information is required
+
+select_tool:
+  system_prompt: |
+    A tool is required for this query.
+
+    Available tools:
+    1. math_eval
+      - Evaluate mathematical expressions.
+      - Required parameter:
+        expression
+
+    2. file_search
+      - Read or inspect a local file.
+      - Required parameter:
+        filename
+
+    3. web_search
+      - Retrieve external or current information.
+      - Required parameter:
+        search_query
+
+    Select exactly one tool and extract the required parameters.

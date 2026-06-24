@@ -1,6 +1,7 @@
 from rich.console import Console
 from rich.theme import Theme
 
+
 def get_console() -> Console:
     """Create and return a Rich Console configured with the project's standard theme."""
     theme = Theme(
@@ -17,7 +18,8 @@ def get_console() -> Console:
         force_terminal=True,
         force_jupyter=False,
         color_system="truecolor",
+        width=120,
     )
 
-# Pre-instantiated default console instance for ease of use
+
 console = get_console()

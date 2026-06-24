@@ -1,9 +1,10 @@
-**ROUGE**, which stands for **Recall-Oriented Understudy for Gisting Evaluation**, is a widely used set of metrics designed to evaluate automatic text summarization and machine translation systems. It assesses the quality of a machine-generated summary by comparing it to one or more human-written reference summaries.
+ROUGE (Recall-Oriented Understudy for Gisting Evaluation) is a set of metrics used for evaluating the quality of automatically generated text, primarily in summarization and machine translation. It works by comparing an automatically produced summary (candidate) against one or more human-written summaries (references) by counting the overlap of n-grams or subsequences.
 
-The metric works by measuring the overlap of words or phrases between the generated text and the reference text. The most common variants of ROUGE include:
+The most common variants include:
 
-*   **ROUGE-N:** Measures the overlap of $n$-grams. For example, ROUGE-1 calculates the overlap of single words (unigrams), while ROUGE-2 measures two-word sequences (bigrams).
-*   **ROUGE-L:** Uses the Longest Common Subsequence (LCS) to find the longest shared sequence of words in structure, which naturally accounts for sentence-level word order.
-*   **ROUGE-S:** Measures skip-bigram co-occurrence, allowing for words to be separated by arbitrary gaps.
+1.  **ROUGE-N:** Measures the overlap of *n*-grams (sequences of *N* words).
+    *   **ROUGE-1:** Counts matching single words (unigrams), assessing the presence of key content.
+    *   **ROUGE-2:** Counts matching two-word sequences (bigrams), which gives a better indication of fluency and phrase accuracy.
+2.  **ROUGE-L:** Based on the Longest Common Subsequence (LCS). Unlike n-grams, LCS doesn't require consecutive matches, making it more flexible to rephrasing and word order variations while still capturing sentence-level structure.
 
-ROUGE typically reports precision, recall, and F1-score. While precision measures how much of the generated summary is relevant, **recall** is highly emphasized because it determines how much of the essential information from the reference text was successfully captured. Despite its limitation in capturing synonyms, ROUGE remains an industry standard due to its simplicity and high correlation with human judgment.
+ROUGE scores are typically reported as precision, recall, or an F1-score (harmonic mean of precision and recall), providing a balanced view. While widely adopted for its objectivity and automation, ROUGE is a purely lexical metric. It struggles with semantic equivalence, synonyms, or paraphrases, meaning a summary conveying the same meaning using different words might receive a lower score. Despite these limitations, ROUGE remains a foundational benchmark for assessing textual generation quality.

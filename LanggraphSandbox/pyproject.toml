@@ -21,6 +21,7 @@ dependencies = [
     "matplotlib",
     "catppuccin",
     "pytest",
+    "termcolor>=3.3.0",
 ]
 
 [tool.setuptools]
