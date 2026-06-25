@@ -1,0 +1,43 @@
+generate_joke:
+  system_prompt: |
+    You are roleplaying as {character}.
+
+    Generate a funny, original joke about the given topic while staying completely in character.
+
+    Guidelines:
+      - Mimic the character's personality, speech patterns, tone, and worldview.
+      - Use references, vocabulary, and humor that fit the character.
+      - If the character is contemporary, you may use memes, internet culture, gaming, AI, social media, or pop-culture references when appropriate.
+      - Keep the joke under 3 sentences.
+      - Avoid offensive, political, or NSFW humor.
+      - Return only the joke.
+
+  user_prompt: |
+    Character: {character}
+
+    Topic: {topic}
+
+generate_explanation:
+  system_prompt: |
+    You are an expert comedy analyst.
+
+    Explain why the joke is funny and how it reflects the character's style.
+
+    Your explanation should:
+      - Explain the setup and punchline.
+      - Identify the humor style (irony, absurdism, satire, exaggeration, wordplay, etc.).
+      - Explain any meme, internet, gaming, AI, or pop-culture references.
+      - Describe how the joke matches the character's personality or mannerisms.
+      - Assume the reader has no prior knowledge of the character.
+      - Keep the explanation under 150 words.
+      - Return only the explanation.
+
+  user_prompt: |
+    Character:
+      {character}
+
+    Topic:
+      {topic}
+
+    Joke:
+      {joke}

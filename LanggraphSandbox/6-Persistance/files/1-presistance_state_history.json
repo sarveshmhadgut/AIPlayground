@@ -1,0 +1,164 @@
+[
+    [
+        {
+            "character": "Shashi Tharoor",
+            "topic": "sirius",
+            "joke": "One might argue that Sirius, being the most resplendent star in our nocturnal panorama, harbors a rather incandescent ego, constantly demanding all available cosmological attention. One does wonder if its formidable brilliance merely stems from an insatiable desire to be the 'goodest boy' of the entire celestial kennel.",
+            "explanation": "The joke's setup establishes Shashi Tharoor's verbose, sophisticated style by describing Sirius as the 'most resplendent star' with an 'incandescent ego,' using his famously elaborate vocabulary. The punchline delivers a classic Tharoorian twist, anthropomorphizing the star into a dog. The humor stems from the juxtaposition of cosmic grandiosity with the quaint, internet-era slang 'goodest boy,' typically used for an obedient pet. The 'celestial kennel' extends this absurd metaphor. The humor style is a blend of ironic exaggeration and wordplay, as he applies overly academic language to a simple, charming, and relatable concept. This perfectly reflects Tharoor's character: an intellectual known for his extensive vocabulary who uses wit to deliver unexpected, often self-deprecating, observations."
+        },
+        [],
+        {
+            "configurable": {
+                "thread_id": "sirius",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b66-af42-69d0-8002-2962842b15e4"
+            }
+        },
+        {
+            "source": "loop",
+            "step": 2,
+            "parents": {}
+        },
+        "2026-06-25T16:53:40.594104+00:00",
+        {
+            "configurable": {
+                "thread_id": "sirius",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b66-7a8d-6320-8001-5e78fe4ef6e8"
+            }
+        },
+        [],
+        []
+    ],
+    [
+        {
+            "character": "Shashi Tharoor",
+            "topic": "sirius",
+            "joke": "One might argue that Sirius, being the most resplendent star in our nocturnal panorama, harbors a rather incandescent ego, constantly demanding all available cosmological attention. One does wonder if its formidable brilliance merely stems from an insatiable desire to be the 'goodest boy' of the entire celestial kennel."
+        },
+        [
+            "generate_explanation"
+        ],
+        {
+            "configurable": {
+                "thread_id": "sirius",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b66-7a8d-6320-8001-5e78fe4ef6e8"
+            }
+        },
+        {
+            "source": "loop",
+            "step": 1,
+            "parents": {}
+        },
+        "2026-06-25T16:53:35.067200+00:00",
+        {
+            "configurable": {
+                "thread_id": "sirius",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b66-37d0-6bd6-8000-75a325a64e2f"
+            }
+        },
+        [
+            [
+                "81ea7280-469b-c4b5-d7c6-b4ce219d61d3",
+                "generate_explanation",
+                [
+                    "__pregel_pull",
+                    "generate_explanation"
+                ],
+                null,
+                [],
+                null,
+                {
+                    "explanation": "The joke's setup establishes Shashi Tharoor's verbose, sophisticated style by describing Sirius as the 'most resplendent star' with an 'incandescent ego,' using his famously elaborate vocabulary. The punchline delivers a classic Tharoorian twist, anthropomorphizing the star into a dog. The humor stems from the juxtaposition of cosmic grandiosity with the quaint, internet-era slang 'goodest boy,' typically used for an obedient pet. The 'celestial kennel' extends this absurd metaphor. The humor style is a blend of ironic exaggeration and wordplay, as he applies overly academic language to a simple, charming, and relatable concept. This perfectly reflects Tharoor's character: an intellectual known for his extensive vocabulary who uses wit to deliver unexpected, often self-deprecating, observations."
+                }
+            ]
+        ],
+        []
+    ],
+    [
+        {
+            "character": "Shashi Tharoor",
+            "topic": "sirius"
+        },
+        [
+            "generate_joke"
+        ],
+        {
+            "configurable": {
+                "thread_id": "sirius",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b66-37d0-6bd6-8000-75a325a64e2f"
+            }
+        },
+        {
+            "source": "loop",
+            "step": 0,
+            "parents": {}
+        },
+        "2026-06-25T16:53:28.069415+00:00",
+        {
+            "configurable": {
+                "thread_id": "sirius",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b66-37cd-6468-bfff-caa95bc6de77"
+            }
+        },
+        [
+            [
+                "428bf725-f3e6-962c-3343-672bd7c4dd98",
+                "generate_joke",
+                [
+                    "__pregel_pull",
+                    "generate_joke"
+                ],
+                null,
+                [],
+                null,
+                {
+                    "joke": "One might argue that Sirius, being the most resplendent star in our nocturnal panorama, harbors a rather incandescent ego, constantly demanding all available cosmological attention. One does wonder if its formidable brilliance merely stems from an insatiable desire to be the 'goodest boy' of the entire celestial kennel."
+                }
+            ]
+        ],
+        []
+    ],
+    [
+        {},
+        [
+            "__start__"
+        ],
+        {
+            "configurable": {
+                "thread_id": "sirius",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b66-37cd-6468-bfff-caa95bc6de77"
+            }
+        },
+        {
+            "source": "input",
+            "step": -1,
+            "parents": {}
+        },
+        "2026-06-25T16:53:28.067994+00:00",
+        null,
+        [
+            [
+                "ebcafe47-76f5-508e-0630-f39baa86c37e",
+                "__start__",
+                [
+                    "__pregel_pull",
+                    "__start__"
+                ],
+                null,
+                [],
+                null,
+                {
+                    "character": "Shashi Tharoor",
+                    "topic": "sirius"
+                }
+            ]
+        ],
+        []
+    ]
+]

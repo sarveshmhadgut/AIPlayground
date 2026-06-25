@@ -1,0 +1,213 @@
+[
+    [
+        {
+            "character": "Shashi Tharoor",
+            "topic": "Counter Strike",
+            "joke": "My dear friends, mastering the intricate, nay, labyrinthine nomenclature of 'rush B' and 'eco round' in Counter-Strike proves almost as formidable an intellectual exercise as navigating the more bewildering lexicons of parliamentary discourse. Frankly, the only 'AWP' I'm truly adept with is 'Academic Word Power'!",
+            "explanation": "The joke leverages Shashi Tharoor's famously verbose and intellectual style to humorously address a niche topic. The setup elaborately compares mastering Counter-Strike terms like 'rush B' (a team strategy) and 'eco round' (saving money) to navigating 'parliamentary discourse,' an exaggerated contrast that highlights his erudite persona. The humor is primarily wordplay and self-deprecating irony. The punchline, \"the only 'AWP' I'm truly adept with is 'Academic Word Power',\" brilliantly twists 'AWP' (a powerful sniper rifle in the game) into a self-referential joke about his renowned vocabulary. It perfectly reflects his intellectual, often overly articulate, public image, creating humor from the juxtaposition of a video game with his sophisticated language."
+        },
+        [],
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6e-26f7-61d6-8003-6edc4c610505"
+            }
+        },
+        {
+            "source": "loop",
+            "step": 3,
+            "parents": {}
+        },
+        "2026-06-25T16:57:01.050909+00:00",
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-e885-69de-8002-6f36c1e3c7d2"
+            }
+        },
+        [],
+        []
+    ],
+    [
+        {
+            "character": "Shashi Tharoor",
+            "topic": "Counter Strike",
+            "joke": "My dear friends, mastering the intricate, nay, labyrinthine nomenclature of 'rush B' and 'eco round' in Counter-Strike proves almost as formidable an intellectual exercise as navigating the more bewildering lexicons of parliamentary discourse. Frankly, the only 'AWP' I'm truly adept with is 'Academic Word Power'!"
+        },
+        [
+            "generate_explanation"
+        ],
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-e885-69de-8002-6f36c1e3c7d2"
+            }
+        },
+        {
+            "source": "loop",
+            "step": 2,
+            "parents": {}
+        },
+        "2026-06-25T16:56:54.503210+00:00",
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-4f9c-6894-8001-595284aac404"
+            }
+        },
+        [
+            [
+                "ee733e86-43c0-7a14-5c5d-4b93a565f17f",
+                "generate_explanation",
+                [
+                    "__pregel_pull",
+                    "generate_explanation"
+                ],
+                null,
+                [],
+                null,
+                {
+                    "explanation": "The joke leverages Shashi Tharoor's famously verbose and intellectual style to humorously address a niche topic. The setup elaborately compares mastering Counter-Strike terms like 'rush B' (a team strategy) and 'eco round' (saving money) to navigating 'parliamentary discourse,' an exaggerated contrast that highlights his erudite persona. The humor is primarily wordplay and self-deprecating irony. The punchline, \"the only 'AWP' I'm truly adept with is 'Academic Word Power',\" brilliantly twists 'AWP' (a powerful sniper rifle in the game) into a self-referential joke about his renowned vocabulary. It perfectly reflects his intellectual, often overly articulate, public image, creating humor from the juxtaposition of a video game with his sophisticated language."
+                }
+            ]
+        ],
+        []
+    ],
+    [
+        {
+            "character": "Shashi Tharoor",
+            "topic": "Counter Strike",
+            "joke": "My dear friends, mastering the intricate, nay, labyrinthine nomenclature of 'rush B' and 'eco round' in Counter-Strike proves almost as formidable an intellectual exercise as navigating the more bewildering lexicons of parliamentary discourse. Frankly, the only 'AWP' I'm truly adept with is 'Academic Word Power'!"
+        },
+        [
+            "simulate_latency"
+        ],
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-4f9c-6894-8001-595284aac404"
+            }
+        },
+        {
+            "source": "loop",
+            "step": 1,
+            "parents": {}
+        },
+        "2026-06-25T16:56:38.469402+00:00",
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-0d99-6bfe-8000-bbaaf8e17ae4"
+            }
+        },
+        [
+            [
+                "609eb279-bb55-dce5-0b61-5d0847b9ac02",
+                "simulate_latency",
+                [
+                    "__pregel_pull",
+                    "simulate_latency"
+                ],
+                null,
+                [],
+                null,
+                {
+                    "character": "Shashi Tharoor",
+                    "topic": "Counter Strike",
+                    "joke": "My dear friends, mastering the intricate, nay, labyrinthine nomenclature of 'rush B' and 'eco round' in Counter-Strike proves almost as formidable an intellectual exercise as navigating the more bewildering lexicons of parliamentary discourse. Frankly, the only 'AWP' I'm truly adept with is 'Academic Word Power'!"
+                }
+            ]
+        ],
+        []
+    ],
+    [
+        {
+            "character": "Shashi Tharoor",
+            "topic": "Counter Strike"
+        },
+        [
+            "generate_joke"
+        ],
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-0d99-6bfe-8000-bbaaf8e17ae4"
+            }
+        },
+        {
+            "source": "loop",
+            "step": 0,
+            "parents": {}
+        },
+        "2026-06-25T16:56:31.547682+00:00",
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-0d96-6292-bfff-bed721663607"
+            }
+        },
+        [
+            [
+                "f02ca254-2d89-f171-5f2a-62b857a22a32",
+                "generate_joke",
+                [
+                    "__pregel_pull",
+                    "generate_joke"
+                ],
+                null,
+                [],
+                null,
+                {
+                    "joke": "My dear friends, mastering the intricate, nay, labyrinthine nomenclature of 'rush B' and 'eco round' in Counter-Strike proves almost as formidable an intellectual exercise as navigating the more bewildering lexicons of parliamentary discourse. Frankly, the only 'AWP' I'm truly adept with is 'Academic Word Power'!"
+                }
+            ]
+        ],
+        []
+    ],
+    [
+        {},
+        [
+            "__start__"
+        ],
+        {
+            "configurable": {
+                "thread_id": "277591444769552116663603470018052423641",
+                "checkpoint_ns": "",
+                "checkpoint_id": "1f170b6d-0d96-6292-bfff-bed721663607"
+            }
+        },
+        {
+            "source": "input",
+            "step": -1,
+            "parents": {}
+        },
+        "2026-06-25T16:56:31.546221+00:00",
+        null,
+        [
+            [
+                "d6a516d8-783b-b086-b49e-af1956fcae02",
+                "__start__",
+                [
+                    "__pregel_pull",
+                    "__start__"
+                ],
+                null,
+                [],
+                null,
+                {
+                    "character": "Shashi Tharoor",
+                    "topic": "Counter Strike"
+                }
+            ]
+        ],
+        []
+    ]
+]

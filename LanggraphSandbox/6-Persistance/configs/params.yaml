@@ -1,0 +1,18 @@
+llm:
+  model: "gemini-2.5-flash"
+  temperature: 1.3
+  max_output_tokens: 2000
+
+JokeSchema:
+  description: |
+    A short, original, and humorous joke about the provided topic.
+    The joke should be engaging, family-friendly, and may incorporate contemporary internet culture, Gen Z humor, memes, gaming, AI, social media, or pop-culture references when relevant.
+
+    Return only the joke text without any explanation or additional formatting.
+
+ExplanationSchema:
+  description: |
+    A concise explanation of why the joke is funny.
+    Describe the setup, punchline, humor mechanism (such as irony, exaggeration, absurdity, wordplay, or satire), and explain any Gen Z slang, meme references, or pop-culture references that may not be obvious to a general audience.
+
+    Return only the explanation text.

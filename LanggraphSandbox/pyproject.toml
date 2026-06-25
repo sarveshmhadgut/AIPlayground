@@ -21,8 +21,15 @@ dependencies = [
     "matplotlib",
     "catppuccin",
     "pytest",
-    "termcolor>=3.3.0",
+    "termcolor",
+    "uuid",
 ]
 
 [tool.setuptools]
 packages = ["langgraph_utils"]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.3.0",
+    "ipython>=9.14.1",
+]
