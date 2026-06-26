@@ -1,0 +1,103 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+
+/* Safely apply custom font */
+html,
+body,
+p,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+button,
+textarea,
+a {
+    font-family: 'Satoshi', sans-serif;
+}
+
+/* Force Streamlit icons back to native material-symbols to fix text breakage */
+.material-symbols-rounded,
+.material-icons,
+[class*="icon"] {
+    font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
+}
+
+/* Hide Streamlit elements */
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+/* Main Block */
+.block-container {
+    max-width: 900px !important;
+    padding-top: 3rem !important;
+    padding-bottom: 1rem;
+}
+
+/* Elegant Title */
+h1 {
+    text-align: center !important;
+    color: #ff8d67 !important;
+    font-weight: 800 !important;
+    font-size: 3rem !important;
+    line-height: 1.6 !important;
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+    overflow: visible !important;
+}
+
+/* Hide chat avatar symbols completely */
+div[data-testid*="Avatar"],
+div[data-testid*="stChatMessageAvatar"],
+.stChatAvatar {
+    display: none !important;
+}
+
+/* Force Transparent Wrapper Backgrounds */
+div[data-testid="stChatMessage"] {
+    background-color: transparent !important;
+}
+
+/* Make Message Bubbles Compact */
+div[data-testid="stChatMessageContent"] {
+    flex: 0 1 auto !important;
+    width: fit-content !important;
+    max-width: 80% !important;
+    color: black !important;
+    border-radius: 18px !important;
+    padding: 10px 16px !important;
+    margin: 0 !important;
+}
+
+div[data-testid="stChatMessageContent"] * {
+    color: black !important;
+    margin-bottom: 0;
+}
+
+/* AI Message Bubble (Left, #101010, White Text) */
+div[data-testid="stChatMessage"]:not(:has(.user-message)) div[data-testid="stChatMessageContent"] {
+    background-color: #101010 !important;
+    color: white !important;
+}
+
+div[data-testid="stChatMessage"]:not(:has(.user-message)) div[data-testid="stChatMessageContent"] * {
+    color: white !important;
+}
+
+/* Human Message Bubble (Right, #E59F87) */
+div[data-testid="stChatMessage"]:has(.user-message) {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+div[data-testid="stChatMessage"]:has(.user-message) div[data-testid="stChatMessageContent"] {
+    background-color: #E59F87 !important;
+}

@@ -1,0 +1,48 @@
+# imports & setups
+import uuid
+import streamlit as st
+from pathlib import Path
+from backend import get_llm
+from langchain_core.messages import HumanMessage
+
+
+css_path = Path(__file__).parent / "styles/styles.css"
+style_css = f"<style>{css_path.read_text()}</style>" if css_path.exists() else ""
+
+st.set_page_config(page_title="Flaude", layout="centered")
+if style_css:
+    st.markdown(style_css, unsafe_allow_html=True)
+st.markdown("<h1>Flaude</h1>", unsafe_allow_html=True)
+
+llm = get_llm()
+config = {"configurable": {"thread_id": uuid.uuid4()}}
+
+# session params
+if "messages" not in st.session_state:
+    st.session_state["messages"] = []
+
+# display messages
+for message in st.session_state["messages"]:
+    with st.chat_message(message["role"]):
+        if message["role"] == "user":
+            st.markdown(f'<div class="user-message">{message["content"]}</div>', unsafe_allow_html=True)
+        else:
+            st.write(message["content"])
+
+user_input = st.chat_input("Ask Flaude")
+if user_input:
+    st.session_state["messages"].append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(f'<div class="user-message">{user_input}</div>', unsafe_allow_html=True)
+
+    with st.chat_message("assistant"):
+        ai_message = st.write_stream(
+            message_chunk.content
+            for message_chunk, metadata in llm.stream(
+                {"messages": [HumanMessage(content=user_input)]},
+                config=config,
+                stream_mode="messages",
+            )
+        )
+
+    st.session_state["messages"].append({"role": "assistant", "content": ai_message})

@@ -23,6 +23,8 @@ dependencies = [
     "pytest",
     "termcolor",
     "uuid",
+    "streamlit",
+    "watchdog>=6.0.0",
 ]
 
 [tool.setuptools]
@@ -30,6 +32,6 @@ packages = ["langgraph_utils"]
 
 [dependency-groups]
 dev = [
-    "ipykernel>=7.3.0",
-    "ipython>=9.14.1",
+    "ipykernel",
+    "ipython",
 ]
