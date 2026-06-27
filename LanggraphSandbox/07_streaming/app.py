@@ -2,7 +2,7 @@
 import uuid
 import streamlit as st
 from pathlib import Path
-from backend import get_llm
+from backend import workflow as llm
 from langchain_core.messages import HumanMessage
 
 
@@ -14,10 +14,13 @@ if style_css:
     st.markdown(style_css, unsafe_allow_html=True)
 st.markdown("<h1>Flaude</h1>", unsafe_allow_html=True)
 
-llm = get_llm()
-config = {"configurable": {"thread_id": uuid.uuid4()}}
 
-# session params
+if "thread_id" not in st.session_state:
+    st.session_state["thread_id"] = str(uuid.uuid4())
+
+config = {"configurable": {"thread_id": st.session_state["thread_id"]}}
+
+# session states
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
@@ -32,6 +35,7 @@ for message in st.session_state["messages"]:
 user_input = st.chat_input("Ask Flaude")
 if user_input:
     st.session_state["messages"].append({"role": "user", "content": user_input})
+
     with st.chat_message("user"):
         st.markdown(f'<div class="user-message">{user_input}</div>', unsafe_allow_html=True)
 
@@ -43,6 +47,7 @@ if user_input:
                 config=config,
                 stream_mode="messages",
             )
+            if metadata.get("ls_integration") == "langchain_chat_model"
         )
 
     st.session_state["messages"].append({"role": "assistant", "content": ai_message})

@@ -1,0 +1,31 @@
+import yaml
+from pathlib import Path
+from dotenv import load_dotenv
+
+# from pydantic import BaseModel, Field
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.output_parsers import StrOutputParser
+
+params_configs = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
+prompt_configs = yaml.safe_load((Path(__file__).parent / "configs/prompts.yaml").read_text())
+load_dotenv()
+
+model = ChatGoogleGenerativeAI(**params_configs["llm"])
+parser = StrOutputParser()
+
+
+def generate_title(conversation_history):
+    if not conversation_history:
+        return "new conversation"
+
+    prompt = ChatPromptTemplate(
+        [
+            ("system", prompt_configs["generate_title"]),
+            ("user", "Conversation:\n\t{conversation_history}"),
+        ]
+    )
+
+    chain = prompt | model | parser
+    res = chain.invoke({"conversation_history": conversation_history})
+    return res
