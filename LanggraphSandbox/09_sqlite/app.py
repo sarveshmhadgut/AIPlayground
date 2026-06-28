@@ -2,13 +2,13 @@
 import uuid
 import streamlit as st
 from pathlib import Path
-from backend import workflow as llm
-from chat_title_generator import generate_title
 from langchain_core.messages import HumanMessage
+from backend import load_db_conversations, workflow as llm
+from chat_title_generator import generate_title, load_thread_mapping
 
 css_path = Path(__file__).parent / "styles/styles.css"
 style_css = f"<style>{css_path.read_text()}</style>" if css_path.exists() else ""
-
+import os
 
 st.set_page_config(page_title="Flaude", layout="centered")
 if style_css:
@@ -47,10 +47,10 @@ def load_conversation_history(thread_id):
 
 # session params
 if "threads" not in st.session_state:
-    st.session_state["threads"] = []
+    st.session_state["threads"] = load_db_conversations()
 
 if "thread_mapping" not in st.session_state:
-    st.session_state["thread_mapping"] = {}
+    st.session_state["thread_mapping"] = load_thread_mapping()
 
 if "current_thread" not in st.session_state:
     new_conversation()
@@ -75,23 +75,24 @@ if st.sidebar.button("New Conversation", key="btn_new_chat", type="primary", use
 # conversations
 st.sidebar.header("Conversations")
 for thread in reversed(st.session_state["threads"]):
-    title = st.session_state["thread_mapping"].get(thread, "New Conversation")
-    if st.sidebar.button(title, key=f"btn_{thread}", use_container_width=True):
-        st.session_state["current_thread"] = thread
-
-        conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
-
-        previous_messages = []
-        for message in conversation_history:
-            if isinstance(message, HumanMessage):
-                role = "user"
-            else:
-                role = "assistant"
-
-            previous_messages.append({"role": role, "content": message.content})
-
-        st.session_state["messages"] = previous_messages
-        st.rerun()
+    title = st.session_state["thread_mapping"].get(thread, "")
+    if title:
+        if st.sidebar.button(title, key=f"btn_{thread}", use_container_width=True):
+            st.session_state["current_thread"] = thread
+    
+            conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
+    
+            previous_messages = []
+            for message in conversation_history:
+                if isinstance(message, HumanMessage):
+                    role = "user"
+                else:
+                    role = "assistant"
+    
+                previous_messages.append({"role": role, "content": message.content})
+    
+            st.session_state["messages"] = previous_messages
+            st.rerun()
 
 user_input = st.chat_input("Ask Flaude")
 if user_input:
@@ -113,6 +114,9 @@ if user_input:
 
     st.session_state["messages"].append({"role": "assistant", "content": ai_message})
     if not st.session_state["thread_mapping"].get(st.session_state["current_thread"]):
-        new_title = generate_title(st.session_state["messages"][:2])
+        new_title = generate_title(
+            thread_id=st.session_state["current_thread"], conversation_history=st.session_state["messages"][:2]
+        )
+
         st.session_state["thread_mapping"][st.session_state["current_thread"]] = new_title
         st.rerun()
