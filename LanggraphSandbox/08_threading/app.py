@@ -59,8 +59,6 @@ if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
 
-config = {"configurable": {"thread_id": st.session_state["current_thread"]}}
-
 for message in st.session_state["messages"]:
     with st.chat_message(message["role"]):
         if message["role"] == "user":
@@ -72,7 +70,7 @@ for message in st.session_state["messages"]:
 if st.sidebar.button("New Conversation", key="btn_new_chat", type="primary", use_container_width=True):
     new_conversation()
 
-# conversations
+# sidebar
 st.sidebar.header("Conversations")
 for thread in reversed(st.session_state["threads"]):
     title = st.session_state["thread_mapping"].get(thread, "New Conversation")
@@ -93,6 +91,7 @@ for thread in reversed(st.session_state["threads"]):
         st.session_state["messages"] = previous_messages
         st.rerun()
 
+# input field
 user_input = st.chat_input("Ask Flaude")
 if user_input:
     st.session_state["messages"].append({"role": "user", "content": user_input})
@@ -100,6 +99,7 @@ if user_input:
     with st.chat_message("user"):
         st.markdown(f'<div class="user-message">{user_input}</div>', unsafe_allow_html=True)
 
+    config = {"configurable": {"thread_id": st.session_state["current_thread"]}}
     with st.chat_message("assistant"):
         ai_message = st.write_stream(
             message_chunk.content

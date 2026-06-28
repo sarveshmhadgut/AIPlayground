@@ -1,3 +1,4 @@
+# imports & setups
 import os
 import yaml
 import sqlite3
@@ -11,13 +12,16 @@ params_configs = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").
 prompt_configs = yaml.safe_load((Path(__file__).parent / "configs/prompts.yaml").read_text())
 load_dotenv()
 
+# model & parser
 model = ChatGoogleGenerativeAI(**params_configs["llm"])
 parser = StrOutputParser()
 
+# cursor
 os.makedirs("db", exist_ok=True)
 conn = sqlite3.connect("db/flaude_mapping.db", check_same_thread=False)
 cursor = conn.cursor()
 
+# init table
 cursor.execute(prompt_configs["create_table"])
 conn.commit()
 

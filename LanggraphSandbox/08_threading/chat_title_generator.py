@@ -1,8 +1,7 @@
+# imports & setups
 import yaml
 from pathlib import Path
 from dotenv import load_dotenv
-
-# from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
@@ -11,6 +10,7 @@ params_configs = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").
 prompt_configs = yaml.safe_load((Path(__file__).parent / "configs/prompts.yaml").read_text())
 load_dotenv()
 
+# model & parser
 model = ChatGoogleGenerativeAI(**params_configs["llm"])
 parser = StrOutputParser()
 

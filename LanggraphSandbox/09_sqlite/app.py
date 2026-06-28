@@ -76,24 +76,24 @@ if st.sidebar.button("New Conversation", key="btn_new_chat", type="primary", use
 st.sidebar.header("Conversations")
 for thread in reversed(st.session_state["threads"]):
     title = st.session_state["thread_mapping"].get(thread, "")
-    if title:
-        if st.sidebar.button(title, key=f"btn_{thread}", use_container_width=True):
-            st.session_state["current_thread"] = thread
-    
-            conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
-    
-            previous_messages = []
-            for message in conversation_history:
-                if isinstance(message, HumanMessage):
-                    role = "user"
-                else:
-                    role = "assistant"
-    
-                previous_messages.append({"role": role, "content": message.content})
-    
-            st.session_state["messages"] = previous_messages
-            st.rerun()
+    if title and st.sidebar.button(title, key=f"btn_{thread}", use_container_width=True):
+        st.session_state["current_thread"] = thread
 
+        conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
+
+        previous_messages = []
+        for message in conversation_history:
+            if isinstance(message, HumanMessage):
+                role = "user"
+            else:
+                role = "assistant"
+
+            previous_messages.append({"role": role, "content": message.content})
+
+        st.session_state["messages"] = previous_messages
+        st.rerun()
+
+# input field
 user_input = st.chat_input("Ask Flaude")
 if user_input:
     st.session_state["messages"].append({"role": "user", "content": user_input})
@@ -114,9 +114,7 @@ if user_input:
 
     st.session_state["messages"].append({"role": "assistant", "content": ai_message})
     if not st.session_state["thread_mapping"].get(st.session_state["current_thread"]):
-        new_title = generate_title(
-            thread_id=st.session_state["current_thread"], conversation_history=st.session_state["messages"][:2]
-        )
+        new_title = generate_title(thread_id=st.session_state["current_thread"], conversation_history=st.session_state["messages"][:2])
 
         st.session_state["thread_mapping"][st.session_state["current_thread"]] = new_title
         st.rerun()

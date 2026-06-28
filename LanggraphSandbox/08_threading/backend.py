@@ -1,3 +1,4 @@
+# imports & setups
 import yaml
 import operator
 from pathlib import Path
@@ -13,10 +14,12 @@ from langchain_core.messages import BaseMessage, AIMessage
 params_configs = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
 load_dotenv()
 
+# model & parser
 model = ChatGoogleGenerativeAI(**params_configs["llm"])
 parser = StrOutputParser()
 
 
+# state
 class MessageState(TypedDict):
     messages: Annotated[List[BaseMessage], operator.add]
 
@@ -26,10 +29,12 @@ def chat(state: MessageState, config: RunnableConfig):
     return {"messages": [AIMessage(content=res)]}
 
 
+# graph
 graph = StateGraph(MessageState)
 graph.add_node("chat", chat)
 graph.add_edge(START, "chat")
 graph.add_edge("chat", END)
 
+# workflow
 checkpointer = InMemorySaver()
 workflow = graph.compile(checkpointer=checkpointer)
