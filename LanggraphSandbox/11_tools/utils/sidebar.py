@@ -1,5 +1,5 @@
 import streamlit as st
-from backend import workflow as llm
+from src.backend import workflow as llm
 from utils.config import get_runnable_config
 from langchain_core.messages import HumanMessage, AIMessage
 
@@ -19,7 +19,12 @@ def render_sidebar():
     for thread in reversed(st.session_state["threads"]):
         title = st.session_state["thread_mapping"].get(thread, "")
 
-        if title and st.sidebar.button(title, key=f"btn_{thread}", use_container_width=True):
+        if title and st.sidebar.button(
+            title,
+            icon=":material/chat:",
+            key=f"btn_{thread}",
+            use_container_width=True,
+        ):
             st.session_state["current_thread"] = thread
             conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
             previous_messages = []
@@ -28,7 +33,16 @@ def render_sidebar():
                 if isinstance(message, HumanMessage):
                     previous_messages.append({"role": "user", "content": str(message.content)})
                 elif isinstance(message, AIMessage):
-                    previous_messages.append({"role": "assistant", "content": str(message.content)})
+                    content = message.content
+                    content = (
+                        content
+                        if isinstance(content, str)
+                        else "".join(b.get("text", "") if isinstance(b, dict) else str(b) for b in content)
+                        if content
+                        else ""
+                    )
+                    if content:
+                        previous_messages.append({"role": "assistant", "content": content})
 
             st.session_state["messages"] = previous_messages
             st.rerun()

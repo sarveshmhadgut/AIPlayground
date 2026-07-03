@@ -4,7 +4,6 @@ import sqlite3
 from pathlib import Path
 from langchain_core.runnables import RunnableConfig
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.output_parsers import StrOutputParser
 
 params_configs = yaml.safe_load(Path("configs/params.yaml").read_text())
 prompt_configs = yaml.safe_load(Path("configs/prompts.yaml").read_text())
@@ -18,16 +17,18 @@ def load_css(filepath):
 
 
 def get_llm(params):
-    model = ChatGoogleGenerativeAI(**params)
-    parser = StrOutputParser()
-    return model | parser
+    return ChatGoogleGenerativeAI(**params)
 
 
 # database
 def get_conn(db_path):
     path = Path(db_path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(database=db_path, check_same_thread=False)
+
+    conn = sqlite3.connect(
+        database=db_path,
+        check_same_thread=False,
+    )
     return conn
 
 
