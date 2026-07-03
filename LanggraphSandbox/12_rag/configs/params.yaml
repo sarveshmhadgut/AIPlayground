@@ -1,0 +1,24 @@
+LANGSMITH_PROJECT: flaude-rag
+LANGCHAIN_TRACING_V2: true
+
+llm:
+  model: "gemini-2.5-flash"
+  temperature: 1.3
+  max_output_tokens: 3000
+
+retriever:
+  - search_type: similarity
+  - search_args:
+      - "k": 4
+
+embeddings:
+  - model: gemini-embedding-001
+
+chunk_size: 1000
+chunk_overlap: 200
+
+files:
+  css_filepath: styles/styles.css
+  chat_db_filepath: db/flaude_chats.db
+  mapping_db_filepath: db/flaude_mapping.db
+  vector_db_path: db/chroma

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from langchain_core.tools import tool
 from langchain_community.tools import DuckDuckGoSearchRun
 
-params_config = yaml.safe_load(Path("./configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
 
 load_dotenv()
 EXCHANGE_RATE_KEY = os.getenv("EXCHANGE_RATE_KEY")

@@ -13,7 +13,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import BaseMessage, AIMessage
 
-params_configs = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
 load_dotenv()
 
 # checkpointer
@@ -29,7 +29,7 @@ def load_db_conversations():
 
 
 # model & parser
-model = ChatGoogleGenerativeAI(**params_configs["llm"])
+model = ChatGoogleGenerativeAI(**PARAMS_CONFIGS["llm"])
 parser = StrOutputParser()
 
 

@@ -14,16 +14,16 @@ from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
 
 load_dotenv()
 
-prompts_config = yaml.safe_load(Path("config/prompts.yaml").read_text())
-params_config = yaml.safe_load(Path("config/params.yaml").read_text())
+PROMPTS_CONFIGS = yaml.safe_load(Path("configs/prompts.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(Path("configs/params.yaml").read_text())
 
 
 # Model
 def get_llm():
     model = ChatGoogleGenerativeAI(
-        model=params_config["llm"]["model"],
-        temperature=params_config["llm"]["temperature"],
-        max_output_tokens=params_config["llm"]["max_output_tokens"],
+        model=PARAMS_CONFIGS["llm"]["model"],
+        temperature=PARAMS_CONFIGS["llm"]["temperature"],
+        max_output_tokens=PARAMS_CONFIGS["llm"]["max_output_tokens"],
     )
 
     parser = StrOutputParser()
@@ -43,7 +43,7 @@ class ChatState(TypedDict):
 
 # node and helper functions
 def set_system_instructions(state: ChatState):
-    system_message = prompts_config["system_instructions"]
+    system_message = PROMPTS_CONFIGS["system_instructions"]
 
     with open("files/messages.txt", "a") as f:
         f.write(f"(('system'), '{system_message}')\n\n")

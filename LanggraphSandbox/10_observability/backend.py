@@ -11,10 +11,10 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_core.messages import BaseMessage, AIMessage
 
-params_config = yaml.safe_load(Path("configs/params.yaml").read_text())
 load_dotenv()
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
 # model
-model = get_llm(params=params_config["llm"])
+model = get_llm(params=PARAMS_CONFIGS["llm"])
 
 
 # state
@@ -35,7 +35,7 @@ graph.add_edge(START, "chat")
 graph.add_edge("chat", END)
 
 # checkpointer
-conn = get_conn(db_path=params_config["files"]["chat_db_filepath"])
+conn = get_conn(db_path=PARAMS_CONFIGS["files"]["chat_db_filepath"])
 checkpointer = SqliteSaver(conn=conn)
 
 # workflow

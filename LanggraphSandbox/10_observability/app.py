@@ -8,9 +8,9 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv(), override=True)
 
 
-params_configs = yaml.safe_load(Path("configs/params.yaml").read_text())
-os.environ["LANGCHAIN_PROJECT"] = params_configs["LANGSMITH_PROJECT"]
-os.environ["LANGCHAIN_TRACING_V2"] = str(params_configs["LANGCHAIN_TRACING_V2"]).lower()
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
+os.environ["LANGCHAIN_PROJECT"] = PARAMS_CONFIGS["LANGSMITH_PROJECT"]
+os.environ["LANGCHAIN_TRACING_V2"] = str(PARAMS_CONFIGS["LANGCHAIN_TRACING_V2"]).lower()
 
 from utils.sidebar import render_sidebar
 from utils.session import new_conversation, init_session
@@ -18,7 +18,7 @@ from utils.chat import display_messages, handle_input
 from utils.config import load_css
 from utils.database import load_thread_mapping, load_conversations
 
-style_css = load_css(filepath=Path(params_configs["files"]["css_filepath"]))
+style_css = load_css(filepath=Path(PARAMS_CONFIGS["files"]["css_filepath"]))
 
 # title and header
 st.set_page_config(page_title="Flaude", layout="centered")

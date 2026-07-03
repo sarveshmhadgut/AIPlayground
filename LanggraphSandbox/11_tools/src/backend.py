@@ -13,11 +13,11 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.prebuilt import ToolNode, tools_condition
 
-params_config = yaml.safe_load(Path("configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
 load_dotenv()
 
 # model
-model = get_llm(params=params_config["llm"])
+model = get_llm(params=PARAMS_CONFIGS["llm"])
 bound_model = model.bind_tools(available_tools)
 
 
@@ -45,7 +45,7 @@ graph.add_conditional_edges("chat", tools_condition)
 graph.add_edge("tools", "chat")
 
 # checkpointer
-conn = get_conn(db_path=params_config["files"]["chat_db_filepath"])
+conn = get_conn(db_path=PARAMS_CONFIGS["files"]["chat_db_filepath"])
 checkpointer = SqliteSaver(conn=conn)
 
 # workflow

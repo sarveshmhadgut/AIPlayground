@@ -24,9 +24,11 @@ dependencies = [
     "termcolor",
     "uuid",
     "streamlit",
-    "watchdog>=6.0.0",
-    "langgraph-checkpoint-sqlite>=3.1.0",
-    "sympy>=1.14.0",
+    "watchdog",
+    "langgraph-checkpoint-sqlite",
+    "sympy",
+    "langchain-chroma",
+    "pypdf>=6.14.2",
 ]
 
 [tool.setuptools]

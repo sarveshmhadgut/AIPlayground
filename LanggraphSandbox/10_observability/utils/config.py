@@ -6,8 +6,8 @@ from langchain_core.runnables import RunnableConfig
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 
-params_configs = yaml.safe_load(Path("configs/params.yaml").read_text())
-prompt_configs = yaml.safe_load(Path("configs/prompts.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
+PROMPTS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/prompts.yaml").read_text())
 
 
 # primitives
