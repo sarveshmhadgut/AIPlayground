@@ -24,3 +24,9 @@ def init_session(load_conversations, load_thread_mapping):
 
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
+
+    if "retrievers" not in st.session_state:
+        st.session_state["retrievers"] = {}
+
+    if "metadatas" not in st.session_state:
+        st.session_state["metadatas"] = {}

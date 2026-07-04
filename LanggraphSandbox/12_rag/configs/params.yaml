@@ -7,18 +7,20 @@ llm:
   max_output_tokens: 3000
 
 retriever:
-  - search_type: similarity
-  - search_args:
-      - "k": 4
+  search_type: similarity
+  search_args:
+    k: 4
 
 embeddings:
-  - model: gemini-embedding-001
+  model: gemini-embedding-001
 
-chunk_size: 1000
-chunk_overlap: 200
+ingestion_pipeline:
+  chunk_size: 1000
+  chunk_overlap: 200
 
 files:
   css_filepath: styles/styles.css
   chat_db_filepath: db/flaude_chats.db
   mapping_db_filepath: db/flaude_mapping.db
   vector_db_path: db/chroma
+  files_dirname: files

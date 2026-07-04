@@ -83,6 +83,10 @@ def handle_input(user_input):
             )
 
     st.session_state["messages"].append({"role": "assistant", "content": ai_message})
+    
+    if run_tree:
+        run_tree.end(outputs={"ai_response": ai_message})
+        
     if not st.session_state["thread_mapping"].get(st.session_state["current_thread"]):
         new_title = generate_title(
             thread_id=st.session_state["current_thread"],

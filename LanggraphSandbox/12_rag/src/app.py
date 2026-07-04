@@ -45,9 +45,33 @@ if st.sidebar.button(
 st.sidebar.header("Conversations")
 render_sidebar()
 
+
 # input field
-user_input = st.chat_input("Ask Flaude")
+user_input = st.chat_input("Ask Flaude", accept_file="multiple")
 if user_input:
-    need_rerun = handle_input(user_input=user_input)
+    try:
+        text = user_input.text
+    except AttributeError:
+        text = user_input
+        
+    try:
+        files = user_input.files
+    except AttributeError:
+        files = None
+
+    need_rerun = False
+    
+    if files:
+        from utils.database import save_file
+        with st.chat_message("assistant"):
+            for file in files:
+                save_file(file)
+        need_rerun = True
+        
+    if text:
+        rerun = handle_input(user_input=text)
+        if rerun:
+            need_rerun = True
+            
     if need_rerun:
         st.rerun()

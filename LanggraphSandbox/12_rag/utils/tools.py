@@ -1,12 +1,15 @@
 import os
 import yaml
 import requests
+import streamlit as st
 from pathlib import Path
 from sympy import sympify
 from dotenv import load_dotenv
-from utils.rag import get_retriever, DB_PATH
+from langchain_chroma import Chroma
 from langchain_core.tools import tool
 from utils.config import get_embeddings
+from langchain_core.runnables import RunnableConfig
+from utils.rag import get_retriever, VECTOR_DB_PATH
 from langchain_community.tools import DuckDuckGoSearchRun
 
 load_dotenv()
@@ -132,15 +135,23 @@ def get_conversion_rate(base_currency: str, target_currency: str):
 
 
 @tool(name_or_callable="rag")
-def rag_tool(query: str):
+def rag_tool(query: str, config: RunnableConfig):
     """
     Search the document database for information related to the query.
     Args:
         query: Search query for the RAG database.
     """
     try:
-        embeddings = get_embeddings(**PARAMS_CONFIGS["embeddings"])
-        retriever = get_retriever(persist_directory=DB_PATH, embeddings=embeddings)
+        current_thread = config["configurable"]["thread_id"]
+
+        embeddings = get_embeddings(params=PARAMS_CONFIGS["embeddings"])
+        vector_store = Chroma(
+            collection_name=current_thread,
+            embedding_function=embeddings,
+            persist_directory=VECTOR_DB_PATH,
+        )
+        retriever = vector_store.as_retriever(**PARAMS_CONFIGS["retriever"])
+
         res = retriever.invoke(query)
 
         content = [doc.page_content for doc in res]
