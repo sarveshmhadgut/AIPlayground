@@ -1,0 +1,46 @@
+research_task:
+  description: >
+    Conduct a thorough research about {topic}. Make sure you find the most cutting-edge and relevant information given
+    the current year is {current_year}. Extract raw data, statistics, and key findings.
+  expected_output: >
+    A list of 10-15 most relevant, comprehensive bullet points detailing raw data, recent discoveries, and critical
+    facts about {topic}.
+  agent: researcher
+
+writing_task:
+  description: >
+    Review the research findings and theoretical analysis, and weave them into a comprehensive, engaging, and accessible
+    report. Ensure the narrative flows well and is easy to understand for both academic peers and the general public.
+  expected_output: >
+    A fully fledged, well-structured report formatted as markdown (without '```') that translates the complex data and
+    analysis into a compelling narrative.
+  agent: writer
+
+review_task:
+  description: >
+    Critically review the draft report for scientific accuracy, logical consistency, and clarity. Ensure that the tone
+    is appropriate and that no claims are made without sufficient evidence backing them up. Point out any logical
+    fallacies or areas needing improvement.
+  expected_output: >
+    A reviewed version of the report with revisions made for enhanced scientific rigor and clarity, formatted as
+    markdown (without '```').
+  agent: reviewer
+
+analysis_task:
+  description: >
+    Take the raw data and findings from the research task and perform a deep theoretical analysis. Identify patterns,
+    theorize about broader implications on physics and cosmology, and provide context for what these findings mean for
+    the universe at large.
+  expected_output: >
+    A detailed analysis document explaining the theoretical implications of the researched data, structured in clear
+    paragraphs.
+  agent: analyst
+
+cross_check_task:
+  description: >
+    Perform a final, rigorous cross-check of the reviewed report. Verify every data point, reference, and calculation
+    against established scientific consensus to prevent any inaccuracies from being published.
+  expected_output: >
+    The final, verified, and flawless version of the {topic} report, ready for publication. Formatted as markdown
+    (without '```').
+  agent: cross_checker

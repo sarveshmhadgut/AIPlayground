@@ -1,0 +1,7 @@
+LANGSMITH_PROJECT: chatbot_with_hitl
+LANGCHAIN_TRACING_V2: true
+
+llm:
+  model: "gemini-2.5-flash"
+  temperature: 1.3
+  max_output_tokens: 3000

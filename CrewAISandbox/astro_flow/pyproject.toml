@@ -1,0 +1,29 @@
+[project]
+name = "astro_flow"
+version = "0.1.0"
+description = "astro_flow using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]==1.14.3",
+    "google-genai>=1.74.0",
+]
+
+[project.scripts]
+kickoff = "astro_flow.main:kickoff"
+run_crew = "astro_flow.main:kickoff"
+plot = "astro_flow.main:plot"
+run_with_trigger = "astro_flow.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "flow"
+
+[tool.ruff.lint]
+ignore = [
+    "I001", "SIM117", "BLE001", "UP006", "UP035", "F401",
+    "F841", "RUF019", "UP039", "F821", "F404", "TRY002", "DTZ005"
+]

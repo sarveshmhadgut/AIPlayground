@@ -1,0 +1,34 @@
+[project]
+name = "langchainsandbox"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "beautifulsoup4",
+    "google-genai",
+    "google-generativeai",
+    "numpy",
+    "openai",
+    "pandas",
+    "pydantic",
+    "python-dotenv",
+    "requests",
+    "rich",
+    "scikit-learn",
+    "termcolor",
+    "wikipedia>=1.4.0",
+]
+
+[tool.uv.workspace]
+members = [
+    ".",
+]
+
+[dependency-groups]
+dev = [
+    "langchainsandbox",
+]
+
+[tool.ruff]
+ignore = ["I001", "SIM117", "BLE001", "UP006", "UP035", "F401", "F841", "RUF019", "UP039", "F821", "F404"]

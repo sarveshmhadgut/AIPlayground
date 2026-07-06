@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.database import save_file
 from src.backend import workflow as llm
 from utils.config import get_runnable_config
 from src.chat_title_generator import generate_title
@@ -47,7 +48,18 @@ def stream_chat(user_input, config, stream_mode="messages", status_holder=None):
 
 
 @traceable(name="flaude_run")
-def handle_input(user_input):
+def handle_input(user_input, files=None):
+    need_rerun = False
+
+    if files:
+        with st.chat_message("assistant"):
+            for file in files:
+                save_file(file)
+        need_rerun = True
+
+    if not user_input:
+        return need_rerun
+
     st.session_state["messages"].append({"role": "user", "content": user_input})
 
     with st.chat_message("user"):
@@ -83,10 +95,10 @@ def handle_input(user_input):
             )
 
     st.session_state["messages"].append({"role": "assistant", "content": ai_message})
-    
+
     if run_tree:
         run_tree.end(outputs={"ai_response": ai_message})
-        
+
     if not st.session_state["thread_mapping"].get(st.session_state["current_thread"]):
         new_title = generate_title(
             thread_id=st.session_state["current_thread"],
@@ -94,5 +106,6 @@ def handle_input(user_input):
         )
 
         st.session_state["thread_mapping"][st.session_state["current_thread"]] = new_title
-        return True
-    return False
+        need_rerun = True
+
+    return need_rerun

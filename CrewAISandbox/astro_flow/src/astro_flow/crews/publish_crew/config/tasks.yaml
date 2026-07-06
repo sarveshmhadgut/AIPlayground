@@ -1,0 +1,44 @@
+seo_optimization_task:
+  description: >
+    Take the final draft report provided below and optimize it for SEO based on the topic: {topic}. 
+    
+    Report:
+    {draft_report}
+    
+    Integrate relevant keywords, create meta descriptions, and ensure the structure is search-engine friendly.
+  expected_output: >
+    An SEO-optimized version of the report, including suggested meta tags, title variations, and keyword density notes.
+  agent: seo_optimizer
+  output_file: output/publish/1_seo_optimized.md
+
+compliance_check_task:
+  description: >
+    Review the SEO-optimized content to ensure it complies with all legal, ethical, and brand guidelines. Flag any potential risks or necessary adjustments.
+  expected_output: >
+    A fully compliant version of the content, with a short summary confirming that no compliance risks remain.
+  agent: compliance_checker
+  output_file: output/publish/2_compliance.md
+
+formatting_task:
+  description: >
+    Take the compliant content and apply the necessary formatting for the target publishing platform. Ensure all markdown, HTML tags, and visual structures are perfectly aligned.
+  expected_output: >
+    The fully formatted content, ready to be ingested by the publishing platform without any further layout adjustments.
+  agent: formatter
+  output_file: output/publish/3_formatted.md
+
+performance_analysis_task:
+  description: >
+    Analyze the formatted content to recommend the optimal publishing schedule, promotional snippets, and distribution strategy.
+  expected_output: >
+    A publishing strategy document outlining the best times to publish, suggested social media snippets, and platform-specific recommendations.
+  agent: performance_analyst
+  output_file: output/publish/4_performance.md
+
+publish_task:
+  description: >
+    Follow the publishing strategy to "publish" the content. (For this simulation, output the final confirmation of publication along with the complete final formatted content and metadata).
+  expected_output: >
+    A final publication confirmation receipt including the finalized content, applied metadata, and the execution details of the publishing strategy.
+  agent: publisher
+  output_file: output/publish/5_published.md

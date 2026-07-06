@@ -1,0 +1,24 @@
+[project]
+name = "default_crewai"
+version = "0.1.0"
+description = "default_crewai using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[google-genai,tools]==1.14.3",
+]
+
+[project.scripts]
+default_crewai = "default_crewai.main:run"
+run_crew = "default_crewai.main:run"
+train = "default_crewai.main:train"
+replay = "default_crewai.main:replay"
+test = "default_crewai.main:test"
+run_with_trigger = "default_crewai.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"

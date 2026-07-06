@@ -53,25 +53,13 @@ if user_input:
         text = user_input.text
     except AttributeError:
         text = user_input
-        
+
     try:
         files = user_input.files
     except AttributeError:
         files = None
 
-    need_rerun = False
-    
-    if files:
-        from utils.database import save_file
-        with st.chat_message("assistant"):
-            for file in files:
-                save_file(file)
-        need_rerun = True
-        
-    if text:
-        rerun = handle_input(user_input=text)
-        if rerun:
-            need_rerun = True
-            
+    need_rerun = handle_input(user_input=text, files=files)
+
     if need_rerun:
         st.rerun()
