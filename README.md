@@ -1,7 +1,6 @@
 # AI Playground
 
-A playground repository containing sandboxes for exploring Large Language Models (LLMs), AI orchestration frameworks, and advanced workflows.
-
+This is a playground repo where I test out LangChain LangGraph, and RAG setups.
 ## Subprojects
 
 - **[CrewAI Sandbox](./CrewAISandbox)**: A collection of agents, tasks, and flows demonstrating multi-agent systems and role-playing AI setups.
