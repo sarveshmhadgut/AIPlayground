@@ -2,6 +2,7 @@ LANGSMITH_PROJECT: stm_postgres
 LANGCHAIN_TRACING_V2: true
 DB_URI: postgresql://postgres:mysecretpassword@localhost:5432/postgres
 MAX_TOKENS: 500
+MAX_MESSAGES: 4
 
 llm:
   model: "gemini-2.5-flash"
