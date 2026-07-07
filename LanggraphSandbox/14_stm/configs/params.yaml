@@ -1,0 +1,9 @@
+LANGSMITH_PROJECT: stm_postgres
+LANGCHAIN_TRACING_V2: true
+
+DB_URI: postgresql://postgres:mysecretpassword@localhost:5432/postgres
+
+llm:
+  model: "gemini-2.5-flash"
+  temperature: 1.3
+  max_output_tokens: 3000
