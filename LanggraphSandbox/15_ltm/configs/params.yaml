@@ -11,3 +11,39 @@ llm:
 
 embeddings:
   model: gemini-embedding-001
+
+MemorySchema:
+  key: |
+    Unique key identifying the memory. Use snake_case (e.g. 'food_preference', 'company', 'profession'). This will be used as the 'key' argument in ltm_store.put().
+
+  value: |
+    The memory text to store under value['text']. Write a complete, self-contained factual statement optimized for semantic search.
+    Do not include the memory key.
+
+    Examples:
+      - "The user works at Lumon Industries."
+      - "The user's favorite season is winter."
+      - "The user likes Garlic Guajillo Shrimps."
+
+DecisionSchema:
+  update_memory: |
+    Indicates whether any long-term memories should be written to the memory store.
+
+    Set to:
+      - true: One or more memories should be created or updated.
+      - false: No memory operations are required and the memories list should be empty.
+
+  memories: |
+    List of memories to write to the memory store.
+
+    Each memory maps directly to:
+
+      ltm_store.put(
+          namespace=<namespace>,
+          key=memory.memory_key,
+          value={
+              "text": memory.memory_value,
+          },
+      )
+
+    Include one entry per distinct memory. Do not combine unrelated facts into a single memory.
