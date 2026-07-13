@@ -1,0 +1,3 @@
+[submodule "LangchainSandbox/Flaude"]
+	path = LangchainSandbox/Flaude
+	url = https://github.com/sarveshmhadgut/Flaude.git
