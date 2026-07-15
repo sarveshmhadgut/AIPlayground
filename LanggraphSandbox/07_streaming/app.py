@@ -28,7 +28,10 @@ if "messages" not in st.session_state:
 for message in st.session_state["messages"]:
     with st.chat_message(message["role"]):
         if message["role"] == "user":
-            st.markdown(f'<div class="user-message">{message["content"]}</div>', unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="user-message">{message["content"]}</div>',
+                unsafe_allow_html=True,
+            )
         else:
             st.write(message["content"])
 
@@ -37,7 +40,9 @@ if user_input:
     st.session_state["messages"].append({"role": "user", "content": user_input})
 
     with st.chat_message("user"):
-        st.markdown(f'<div class="user-message">{user_input}</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="user-message">{user_input}</div>', unsafe_allow_html=True
+        )
 
     with st.chat_message("assistant"):
         ai_message = st.write_stream(

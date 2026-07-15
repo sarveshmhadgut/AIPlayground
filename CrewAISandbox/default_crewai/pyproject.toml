@@ -1,7 +1,7 @@
 [project]
 name = "default_crewai"
 version = "0.1.0"
-description = "default_crewai using crewAI"
+description = "A standard CrewAI crew template with agents and tasks specifically configured for research and reporting."
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [

@@ -18,8 +18,8 @@ class ChromaStore:
             persist_directory (str): The local directory to save the ChromaDB database.
         """
         self.persist_directory: str = persist_directory
-        self.embeddings: GoogleGenerativeAIEmbeddings = (
-            GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
+        self.embeddings: GoogleGenerativeAIEmbeddings = GoogleGenerativeAIEmbeddings(
+            model="gemini-embedding-001"
         )
         self.store: Chroma = Chroma(
             embedding_function=self.embeddings,

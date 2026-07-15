@@ -23,6 +23,4 @@ class ChatModel:
             )
 
         except Exception as e:
-            print(
-                f"Error configuring ChatModel engine API references natively: {e}"
-            )
+            print(f"Error configuring ChatModel engine API references natively: {e}")

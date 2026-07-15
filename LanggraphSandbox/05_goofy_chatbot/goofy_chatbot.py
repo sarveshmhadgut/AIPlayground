@@ -5,7 +5,6 @@ import operator
 from pathlib import Path
 from termcolor import colored
 from dotenv import load_dotenv
-from langgraph_utils import console
 from langgraph.graph import StateGraph, START, END
 from typing import TypedDict, List, Annotated, Literal
 from langchain_google_genai import ChatGoogleGenerativeAI

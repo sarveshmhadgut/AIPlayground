@@ -8,12 +8,14 @@ from utils.tools import available_tools
 from utils.config import get_conn, get_llm
 from typing import TypedDict, Annotated, List
 from langchain_core.messages import BaseMessage
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import StateGraph, START
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.prebuilt import ToolNode, tools_condition
 
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
+)
 load_dotenv()
 
 # model

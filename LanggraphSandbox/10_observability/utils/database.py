@@ -5,7 +5,12 @@ from utils.config import get_conn, PARAMS_CONFIGS, PROMPTS_CONFIGS
 def load_conversations():
     conn = get_conn(PARAMS_CONFIGS["files"]["chat_db_filepath"])
     checkpointer = SqliteSaver(conn=conn)
-    threads = list({checkpoint.config["configurable"]["thread_id"] for checkpoint in checkpointer.list(None)})
+    threads = list(
+        {
+            checkpoint.config["configurable"]["thread_id"]
+            for checkpoint in checkpointer.list(None)
+        }
+    )
     return threads
 
 

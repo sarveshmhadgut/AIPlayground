@@ -12,12 +12,18 @@ model = ChatGoogleGenerativeAI(model="gemini-3-pro-preview")
 class LlmSchema(BaseModel):
     reviewer: str = Field(description="Name of the reviewer", default="Anonymous")
     summary: str = Field(description="Brief summary of the review")
-    pros: Optional[List[str]] = Field(description="Jot down all pros mentioned as a list")
-    cons: Optional[List[str]] = Field(description="Jot down all cons mentioned as a list")
+    pros: Optional[List[str]] = Field(
+        description="Jot down all pros mentioned as a list"
+    )
+    cons: Optional[List[str]] = Field(
+        description="Jot down all cons mentioned as a list"
+    )
     sentiment: Literal["pos", "neu", "cons"] = Field(
         description='"Sentiment of the review as positive, neutral or negative"'
     )
-    rating: Optional[float] = Field(description="Rating of the product if explicitly mentioned in the review")
+    rating: Optional[float] = Field(
+        description="Rating of the product if explicitly mentioned in the review"
+    )
 
 
 review = """

@@ -1,27 +1,27 @@
 # Imports & Setups
 import os
-import yaml
 import sqlite3
-from uuid import uuid1
 from pathlib import Path
-from rich.json import JSON
-from rich.panel import Panel
-from termcolor import colored
+from typing import Annotated, List, TypedDict
+from uuid import uuid1
+
+import yaml
 from dotenv import load_dotenv
-from rich.pretty import Pretty
-from langsmith import traceable
-from tools import available_tools
-from rich.markdown import Markdown
-from langgraph_utils import console
-from typing import TypedDict, Annotated, List
-from langgraph.types import interrupt, Command
-from langgraph.graph.message import add_messages
-from langgraph.graph import StateGraph, START, END
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
-from langgraph.checkpoint.sqlite import SqliteSaver
-from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, AIMessage
+from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.graph import END, START, StateGraph
+from langgraph.graph.message import add_messages
+from langgraph.prebuilt import ToolNode, tools_condition
+from langgraph.types import Command, interrupt
+from langsmith import traceable
+from rich.json import JSON
+from rich.markdown import Markdown
+from rich.panel import Panel
+from tools import available_tools
+
+from langgraph_utils import console
 
 load_dotenv()
 PARAMS_CONFIGS = yaml.safe_load(Path("configs/params.yaml").read_text())
@@ -66,7 +66,9 @@ def chat(state: ToolState, config):
 
 @traceable(name="approve_tool")
 def approve_tools(state: ToolState):
-    required_tools = [tool_call["name"] for tool_call in state["messages"][-1].tool_calls]
+    required_tools = [
+        tool_call["name"] for tool_call in state["messages"][-1].tool_calls
+    ]
 
     approved = interrupt(
         {
@@ -121,7 +123,9 @@ graph.add_node("tools", tools)
 # Add Edges
 graph.add_edge(START, "set_system_instructions")
 graph.add_edge("set_system_instructions", "chat")
-graph.add_conditional_edges("chat", tools_condition, {END: END, "tools": "approve_tools"})
+graph.add_conditional_edges(
+    "chat", tools_condition, {END: END, "tools": "approve_tools"}
+)
 
 graph.add_edge("approve_tools", "tools")
 graph.add_edge("tools", "chat")

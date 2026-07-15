@@ -29,7 +29,9 @@ def train():
     """
     inputs = {"topic": "AI LLMs", "current_year": str(datetime.now().year)}
     try:
-        AstroCrewAI().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+        AstroCrewAI().crew().train(
+            n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs
+        )
 
     except Exception as e:
         raise Exception(f"An error occurred while training the crew: {e}")
@@ -53,7 +55,9 @@ def test():
     inputs = {"topic": "AI LLMs", "current_year": str(datetime.now().year)}
 
     try:
-        AstroCrewAI().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
+        AstroCrewAI().crew().test(
+            n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs
+        )
 
     except Exception as e:
         raise Exception(f"An error occurred while testing the crew: {e}")
@@ -66,14 +70,20 @@ def run_with_trigger():
     import json
 
     if len(sys.argv) < 2:
-        raise Exception("No trigger payload provided. Please provide JSON payload as argument.")
+        raise Exception(
+            "No trigger payload provided. Please provide JSON payload as argument."
+        )
 
     try:
         trigger_payload = json.loads(sys.argv[1])
     except json.JSONDecodeError:
         raise Exception("Invalid JSON payload provided as argument")
 
-    inputs = {"crewai_trigger_payload": trigger_payload, "topic": "", "current_year": ""}
+    inputs = {
+        "crewai_trigger_payload": trigger_payload,
+        "topic": "",
+        "current_year": "",
+    }
 
     try:
         result = AstroCrewAI().crew().kickoff(inputs=inputs)

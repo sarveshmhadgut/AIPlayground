@@ -12,7 +12,9 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_core.messages import BaseMessage, AIMessage
 
 load_dotenv()
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent / "configs/params.yaml").read_text()
+)
 # model
 model = get_llm(params=PARAMS_CONFIGS["llm"])
 

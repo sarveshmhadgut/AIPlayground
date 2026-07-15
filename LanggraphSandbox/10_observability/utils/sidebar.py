@@ -5,7 +5,9 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 
 def load_conversation_history(thread_id):
-    thread_name = st.session_state["thread_mapping"].get(thread_id, f"Conversation {thread_id[:8]}")
+    thread_name = st.session_state["thread_mapping"].get(
+        thread_id, f"Conversation {thread_id[:8]}"
+    )
     state = llm.get_state(
         config=get_runnable_config(
             thread_id=thread_id,
@@ -19,16 +21,24 @@ def render_sidebar():
     for thread in reversed(st.session_state["threads"]):
         title = st.session_state["thread_mapping"].get(thread, "")
 
-        if title and st.sidebar.button(title, key=f"btn_{thread}", use_container_width=True):
+        if title and st.sidebar.button(
+            title, key=f"btn_{thread}", use_container_width=True
+        ):
             st.session_state["current_thread"] = thread
-            conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
+            conversation_history = load_conversation_history(
+                thread_id=st.session_state["current_thread"]
+            )
             previous_messages = []
 
             for message in conversation_history:
                 if isinstance(message, HumanMessage):
-                    previous_messages.append({"role": "user", "content": str(message.content)})
+                    previous_messages.append(
+                        {"role": "user", "content": str(message.content)}
+                    )
                 elif isinstance(message, AIMessage):
-                    previous_messages.append({"role": "assistant", "content": str(message.content)})
+                    previous_messages.append(
+                        {"role": "assistant", "content": str(message.content)}
+                    )
 
             st.session_state["messages"] = previous_messages
             st.rerun()

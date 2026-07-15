@@ -2,13 +2,14 @@ import yaml
 import streamlit as st
 from pathlib import Path
 from langsmith import traceable
-from collections import defaultdict
 from langchain_chroma import Chroma
 from utils.config import get_embeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
+)
 VECTOR_DB_PATH = PARAMS_CONFIGS["files"]["vector_db_path"]
 
 

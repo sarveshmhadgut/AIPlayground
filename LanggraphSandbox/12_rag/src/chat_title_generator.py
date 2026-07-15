@@ -8,8 +8,12 @@ from utils.database import save_row
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
-PROMPTS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/prompts.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
+)
+PROMPTS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent.parent / "configs/prompts.yaml").read_text()
+)
 load_dotenv()
 
 

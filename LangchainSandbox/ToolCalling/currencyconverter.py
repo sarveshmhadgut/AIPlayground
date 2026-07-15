@@ -26,7 +26,9 @@ class LlmSchema(BaseModel):
     conversion_rate: float = Field(
         description="Exchange rate indicating how many units of the target currency equal one unit of the base currency"
     )
-    base_value: float = Field(description="Amount in the base currency that needs to be converted.")
+    base_value: float = Field(
+        description="Amount in the base currency that needs to be converted."
+    )
     target_value: float = Field(
         description="Equivalent amount in the target currency after applying the conversion rate."
     )
@@ -82,7 +84,9 @@ def convert_currency(
 # * model init
 model1 = ChatGoogleGenerativeAI(model="gemini-3.1-pro-preview", temperature=0.0)
 chat_history: list = [
-    HumanMessage("Find the conversion rate between KWD and IRR, and based on that convert 18 KWD to IRR"),
+    HumanMessage(
+        "Find the conversion rate between KWD and IRR, and based on that convert 18 KWD to IRR"
+    ),
 ]
 
 # * tool binding
@@ -115,13 +119,19 @@ for tool_call in res.tool_calls:
         print("Invalid tool call")
 
 # * final output
-parser: PydanticOutputParser[LlmSchema] = PydanticOutputParser(pydantic_object=LlmSchema)
+parser: PydanticOutputParser[LlmSchema] = PydanticOutputParser(
+    pydantic_object=LlmSchema
+)
 parser_instructions: str = parser.get_format_instructions()
 
 model = ChatGoogleGenerativeAI(model="gemini-3.1-pro-preview", temperature=0.0)
 chain = model | parser
 
-chat_history.append(HumanMessage(content=f"Extract the result into structured JSON.\n{parser_instructions}"))
+chat_history.append(
+    HumanMessage(
+        content=f"Extract the result into structured JSON.\n{parser_instructions}"
+    )
+)
 with console.status("Fetching model response...", spinner="dots"):
     res: LlmSchema = chain.invoke(chat_history)
 

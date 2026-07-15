@@ -31,7 +31,14 @@ class ContentFlow(Flow[ContentState]):
     def generate_content(self):
         print(f"Generating content on: {self.state.topic}")
         result = (
-            ContentCrew().crew().kickoff(inputs={"topic": self.state.topic, "current_year": str(datetime.now().year)})
+            ContentCrew()
+            .crew()
+            .kickoff(
+                inputs={
+                    "topic": self.state.topic,
+                    "current_year": str(datetime.now().year),
+                }
+            )
         )
 
         print("Content generated")
@@ -40,7 +47,16 @@ class ContentFlow(Flow[ContentState]):
     @listen(generate_content)
     def publish_content(self):
         print(f"Publishing content for: {self.state.topic}")
-        result = PublishCrew().crew().kickoff(inputs={"topic": self.state.topic, "draft_report": self.state.final_post})
+        result = (
+            PublishCrew()
+            .crew()
+            .kickoff(
+                inputs={
+                    "topic": self.state.topic,
+                    "draft_report": self.state.final_post,
+                }
+            )
+        )
 
         print("Content published")
         self.state.published_post = result.raw
@@ -74,7 +90,9 @@ def run_with_trigger():
 
     # Get trigger payload from command line argument
     if len(sys.argv) < 2:
-        raise Exception("No trigger payload provided. Please provide JSON payload as argument.")
+        raise Exception(
+            "No trigger payload provided. Please provide JSON payload as argument."
+        )
 
     try:
         trigger_payload = json.loads(sys.argv[1])

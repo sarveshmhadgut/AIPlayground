@@ -6,9 +6,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 class TranscriptSplitter:
     """Splits large transcript strings into smaller Langchain Documents."""
 
-    def __init__(
-        self, chunk_size: int = 1000, chunk_overlap: int = 200
-    ) -> None:
+    def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 200) -> None:
         """
         Initialize the text splitter.
 
@@ -18,11 +16,9 @@ class TranscriptSplitter:
         """
         self.chunk_size: int = chunk_size
         self.chunk_overlap: int = chunk_overlap
-        self.splitter: RecursiveCharacterTextSplitter = (
-            RecursiveCharacterTextSplitter(
-                chunk_size=self.chunk_size,
-                chunk_overlap=self.chunk_overlap,
-            )
+        self.splitter: RecursiveCharacterTextSplitter = RecursiveCharacterTextSplitter(
+            chunk_size=self.chunk_size,
+            chunk_overlap=self.chunk_overlap,
         )
 
     def split(self, text: str) -> List[Document]:

@@ -8,7 +8,9 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv(), override=True)
 
 
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent / "configs/params.yaml").read_text()
+)
 os.environ["LANGCHAIN_PROJECT"] = PARAMS_CONFIGS["LANGSMITH_PROJECT"]
 os.environ["LANGCHAIN_TRACING_V2"] = str(PARAMS_CONFIGS["LANGCHAIN_TRACING_V2"]).lower()
 
@@ -27,13 +29,17 @@ if style_css:
 st.markdown("<h1>Flaude</h1>", unsafe_allow_html=True)
 
 # init params
-init_session(load_conversations=load_conversations, load_thread_mapping=load_thread_mapping)
+init_session(
+    load_conversations=load_conversations, load_thread_mapping=load_thread_mapping
+)
 
 # display current conversation messages
 display_messages(st.session_state["messages"])
 
 # new chat button
-if st.sidebar.button("New Conversation", key="btn_new_chat", type="primary", use_container_width=True):
+if st.sidebar.button(
+    "New Conversation", key="btn_new_chat", type="primary", use_container_width=True
+):
     new_conversation()
 
 # render sidebar

@@ -99,10 +99,12 @@ def file_search(filename: str):
         return {
             "status": "success",
             "filename": filename,
-            "contents": "\n\n".join(contents) if contents else "No matching files found.",
+            "contents": "\n\n".join(contents)
+            if contents
+            else "No matching files found.",
         }
 
-    except Exception as e:
+    except Exception:
         return {
             "status": "failure",
             "filename": filename,

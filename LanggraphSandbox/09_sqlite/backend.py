@@ -13,7 +13,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.messages import BaseMessage, AIMessage
 
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent / "configs/params.yaml").read_text()
+)
 load_dotenv()
 
 # checkpointer
@@ -23,7 +25,12 @@ checkpointer = SqliteSaver(conn=conn)
 
 
 def load_db_conversations():
-    threads = list({checkpoint.config["configurable"]["thread_id"] for checkpoint in checkpointer.list(None)})
+    threads = list(
+        {
+            checkpoint.config["configurable"]["thread_id"]
+            for checkpoint in checkpointer.list(None)
+        }
+    )
 
     return threads
 

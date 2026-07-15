@@ -6,7 +6,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
+)
 
 os.environ["LANGSMITH_PROJECT"] = PARAMS_CONFIGS["LANGSMITH_PROJECT"]
 os.environ["LANGSMITH_TRACING_V2"] = str(PARAMS_CONFIGS["LANGCHAIN_TRACING_V2"]).lower()
@@ -26,7 +28,9 @@ if style_css:
 st.markdown("<h1>Flaude</h1>", unsafe_allow_html=True)
 
 # init params
-init_session(load_conversations=load_conversations, load_thread_mapping=load_thread_mapping)
+init_session(
+    load_conversations=load_conversations, load_thread_mapping=load_thread_mapping
+)
 
 # display current conversation messages
 display_messages(st.session_state["messages"])

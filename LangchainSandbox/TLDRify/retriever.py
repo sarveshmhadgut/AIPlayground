@@ -13,9 +13,7 @@ class Retriever:
             docs (list[Document]): A list of initialized Langchain Documents.
         """
         try:
-            self.retriever: BM25Retriever = BM25Retriever.from_documents(
-                documents=docs
-            )
+            self.retriever: BM25Retriever = BM25Retriever.from_documents(documents=docs)
             self.retriever.k = 5
 
         except Exception as e:

@@ -73,7 +73,9 @@ goofy_chain = goofy_template | model | blog_parser | as_dict_runnable
 donald_chain = donald_template | model | blog_parser | as_dict_runnable
 
 final_chain = (
-    article_chain | as_dict_runnable | RunnableParallel(branches={"Goofy": goofy_chain, "Scooby": donald_chain})
+    article_chain
+    | as_dict_runnable
+    | RunnableParallel(branches={"Goofy": goofy_chain, "Scooby": donald_chain})
 )
 
 with console.status(

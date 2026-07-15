@@ -29,7 +29,10 @@ def stream_chat(user_input, config, stream_mode="messages", status_holder=None):
             yield (
                 content
                 if isinstance(content, str)
-                else "".join(b.get("text", "") if isinstance(b, dict) else str(b) for b in content)
+                else "".join(
+                    b.get("text", "") if isinstance(b, dict) else str(b)
+                    for b in content
+                )
                 if content
                 else ""
             )
@@ -37,7 +40,9 @@ def stream_chat(user_input, config, stream_mode="messages", status_holder=None):
         if isinstance(message_chunk, ToolMessage):
             tool_name = getattr(message_chunk, "name", "tool")
             if status_holder["box"] is None:
-                status_holder["box"] = st.status(f"Using `{tool_name}` …", expanded=True)
+                status_holder["box"] = st.status(
+                    f"Using `{tool_name}` …", expanded=True
+                )
             else:
                 status_holder["box"].update(
                     label=f"Using `{tool_name}` ...",
@@ -57,7 +62,9 @@ def handle_input(user_input):
         )
 
     thread_id = st.session_state["current_thread"]
-    thread_name = st.session_state["thread_mapping"].get(thread_id, f"Conversation {thread_id[:8]}")
+    thread_name = st.session_state["thread_mapping"].get(
+        thread_id, f"Conversation {thread_id[:8]}"
+    )
 
     run_tree = get_current_run_tree()
     if run_tree:
@@ -89,6 +96,8 @@ def handle_input(user_input):
             conversation_history=st.session_state["messages"][:2],
         )
 
-        st.session_state["thread_mapping"][st.session_state["current_thread"]] = new_title
+        st.session_state["thread_mapping"][st.session_state["current_thread"]] = (
+            new_title
+        )
         return True
     return False

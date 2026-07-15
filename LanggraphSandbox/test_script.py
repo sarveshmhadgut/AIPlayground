@@ -7,8 +7,10 @@ from dotenv import load_dotenv
 load_dotenv()
 model = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
 
+
 class ToolState(TypedDict):
     messages: Annotated[List[BaseMessage], operator.add]
+
 
 try:
     res = model.invoke(["Hello!"])
@@ -21,4 +23,3 @@ try:
     print("invoke with tuple list passed:", res)
 except Exception as e:
     print("Exception with tuple list:", repr(e))
-

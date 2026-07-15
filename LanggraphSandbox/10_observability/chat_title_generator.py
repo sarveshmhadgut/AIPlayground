@@ -7,8 +7,12 @@ from utils.config import get_llm
 from utils.database import save_row
 from langchain_core.prompts import ChatPromptTemplate
 
-PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
-PROMPTS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/prompts.yaml").read_text())
+PARAMS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent / "configs/params.yaml").read_text()
+)
+PROMPTS_CONFIGS = yaml.safe_load(
+    (Path(__file__).parent / "configs/prompts.yaml").read_text()
+)
 load_dotenv()
 
 

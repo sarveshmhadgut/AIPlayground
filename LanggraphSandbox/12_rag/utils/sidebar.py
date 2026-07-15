@@ -6,7 +6,9 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 
 def load_conversation_history(thread_id):
-    thread_name = st.session_state["thread_mapping"].get(thread_id, f"Conversation {thread_id[:8]}")
+    thread_name = st.session_state["thread_mapping"].get(
+        thread_id, f"Conversation {thread_id[:8]}"
+    )
     state = llm.get_state(
         config=get_runnable_config(
             thread_id=thread_id,
@@ -27,7 +29,9 @@ def render_conversations():
             use_container_width=True,
         ):
             st.session_state["current_thread"] = thread
-            conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
+            conversation_history = load_conversation_history(
+                thread_id=st.session_state["current_thread"]
+            )
 
             retriever = get_retriever(thread)
             vector_store = retriever.vectorstore
@@ -41,19 +45,26 @@ def render_conversations():
 
             for message in conversation_history:
                 if isinstance(message, HumanMessage):
-                    previous_messages.append({"role": "user", "content": str(message.content)})
+                    previous_messages.append(
+                        {"role": "user", "content": str(message.content)}
+                    )
 
                 elif isinstance(message, AIMessage):
                     content = message.content
                     content = (
                         content
                         if isinstance(content, str)
-                        else "".join(b.get("text", "") if isinstance(b, dict) else str(b) for b in content)
+                        else "".join(
+                            b.get("text", "") if isinstance(b, dict) else str(b)
+                            for b in content
+                        )
                         if content
                         else ""
                     )
                     if content:
-                        previous_messages.append({"role": "assistant", "content": content})
+                        previous_messages.append(
+                            {"role": "assistant", "content": content}
+                        )
 
             st.session_state["messages"] = previous_messages
             st.rerun()
