@@ -1,3 +1,6 @@
 [submodule "LanggraphSandbox/Flaude"]
 	path = LanggraphSandbox/Flaude
 	url = https://github.com/sarveshmhadgut/Flaude.git
+[submodule "LangchainSandbox/Spool"]
+	path = LangchainSandbox/Spool
+	url = https://github.com/sarveshmhadgut/Spool

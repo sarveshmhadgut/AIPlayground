@@ -15,6 +15,7 @@ LangchainSandbox/
 ├── PromptsNMessages/     # Prompt templates and chat orchestration
 ├── Retrievers/           # Finding data using Vector DBs
 ├── Runnables/            # Core LangChain Runnables (lambda, parallel, passthrough, sequential)
+├── Spool/                # Spool submodule for testing workflow deployments
 ├── StructuredOutput/     # Structured output validations (Pydantic, TypedDict)
 ├── TLDRify/              # YouTube transcript summarizer and Streamlit app
 ├── TextSplitters/        # Chunking strategies for embeddings
