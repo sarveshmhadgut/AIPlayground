@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  check-langgraph:
+    name: LanggraphSandbox & CRAG
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: LanggraphSandbox
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "LanggraphSandbox/.python-version"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Check code formatting (ruff)
+        run: uvx ruff format --check CRAG/ langgraph_utils/ main.py --exclude Flaude
+
+      - name: Lint code (ruff)
+        run: uvx ruff check CRAG/ langgraph_utils/ main.py --exclude Flaude
+
+      - name: Verify Python bytecode compilation
+        run: python3 -m compileall -q CRAG/
+
+  check-flaude:
+    name: Flaude Submodule
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: LanggraphSandbox/Flaude
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "LanggraphSandbox/Flaude/.python-version"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Check code formatting (ruff)
+        run: uvx ruff format --check src/ tests/
+
+      - name: Check import sorting (ruff)
+        run: uvx ruff check --select I src/ tests/
+
+      - name: Lint code (ruff)
+        run: uvx ruff check src/ tests/
+
+      - name: Type check (mypy)
+        run: uvx mypy src --explicit-package-bases --ignore-missing-imports
+
+      - name: Run unit tests (pytest)
+        env:
+          GOOGLE_API_KEY: "goofy-ahh-google-key"
+          LANGCHAIN_API_KEY: "goofy-ahh-langchain-key"
+        run: uv run pytest tests

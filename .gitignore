@@ -21,3 +21,12 @@ chat_history.txt
 *.sqlite3
 store_*/
 store_debug/
+
+# Logs & Serializations
+*.log
+logs/
+*.dill
+*.pkl
+
+# Local scripts
+run_tests.sh

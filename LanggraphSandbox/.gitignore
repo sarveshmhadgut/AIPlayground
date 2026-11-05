@@ -23,4 +23,12 @@ store_*/
 store_debug/
 db/
 AGENTS.md
+
+# Logs & Serializations
+*.log
+logs/
+*.dill
+*.pkl
+
+# Local scripts
 run_tests.sh
