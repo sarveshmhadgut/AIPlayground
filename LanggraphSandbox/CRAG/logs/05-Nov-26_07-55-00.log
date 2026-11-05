@@ -1,0 +1,8 @@
+[ 2026-11-05 13:25:00,107 ] root - rag.py - INFO - Initializing RAGEngine...
+[ 2026-11-05 13:25:00,107 ] root - rag.py - INFO - RAGEngine initialized successfully.
+[ 2026-11-05 13:25:00,109 ] root - utils.py - INFO - Extracting Mermaid diagram from graph...
+[ 2026-11-05 13:25:00,121 ] root - utils.py - INFO - Rendering graphical flowchart PNG to: /Users/sarveshmhadgut/Documents (Local)/AIPlayground/LanggraphSandbox/CRAG/graph.png
+[ 2026-11-05 13:25:01,122 ] root - utils.py - WARNING - Could not render PNG via Mermaid API: Failed to reach https://mermaid.ink API while trying to render your graph after 1 retries. To resolve this issue:
+1. Check your internet connection and try again
+2. Try with higher retry settings: `draw_mermaid_png(..., max_retries=5, retry_delay=2.0)`
+3. Use the Pyppeteer rendering method which will render your graph locally in a browser: `draw_mermaid_png(..., draw_method=MermaidDrawMethod.PYPPETEER)`

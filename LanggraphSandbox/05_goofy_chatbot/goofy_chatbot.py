@@ -16,6 +16,9 @@ load_dotenv()
 PROMPTS_CONFIGS = yaml.safe_load(Path("configs/prompts.yaml").read_text())
 PARAMS_CONFIGS = yaml.safe_load(Path("configs/params.yaml").read_text())
 
+os.environ["LANGSMITH_PROJECT"] = PARAMS_CONFIGS["LANGSMITH_PROJECT"]
+os.environ["LANGSMITH_TRACING_V2"] = str(PARAMS_CONFIGS["LANGCHAIN_TRACING_V2"]).lower()
+
 
 # Model
 def get_llm():
@@ -37,7 +40,7 @@ llm = get_llm()
 # state
 class ChatState(TypedDict):
     messages: Annotated[List, operator.add]
-    exit: Literal[True, False]
+    exit: bool
 
 
 # node and helper functions

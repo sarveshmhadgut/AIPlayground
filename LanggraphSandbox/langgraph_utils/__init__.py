@@ -1,14 +1,14 @@
 import os
-from typing import List
-from rich.theme import Theme
-from termcolor import colored
+
+from langchain_core.messages import AIMessage, BaseMessage
+from langchain_core.runnables import RunnableConfig
 from rich.console import Console
 from rich.markdown import Markdown
-from langchain_core.runnables import RunnableConfig
-from langchain_core.messages import BaseMessage, AIMessage, HumanMessage
+from rich.theme import Theme
+from termcolor import colored
 
 
-def display_conversation(messages: List[BaseMessage]):
+def display_conversation(messages: list[BaseMessage]):
     for message in messages:
         print(colored("LLM:", (193, 162, 255), ["bold"])) if isinstance(
             message, AIMessage
