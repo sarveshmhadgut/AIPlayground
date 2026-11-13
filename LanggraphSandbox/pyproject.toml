@@ -3,7 +3,7 @@ name = "langgraphsandbox"
 version = "0.1.0"
 description = "This is a playground repo where I test out Langgraph, LLMs (mainly Gemini), and RAG setups"
 readme = "README.md"
-requires-python = ">=3.11, <=3.15"
+requires-python = ">=3.14, <=3.15"
 dependencies = [
     "langgraph",
     "langchain",
@@ -33,4 +33,33 @@ dependencies = [
     "docling>=2.146.0",
     "pymupdf>=2.1",
     "ipywidgets>=8.1.9",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.0",
+    "mypy>=1.15.0",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes (F401 unused imports, F841 unused variables strictly enforced)
+    "I",    # isort import sorting
+    "UP",   # pyupgrade (Python 3.14 modern syntax)
+]
+ignore = [
+    "E402", # Module level import not at top of file (dynamic sys.path resolution required for standalone execution)
+]
+
+[tool.pytest.ini_options]
+testpaths = ["corrective_rag/tests"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::pytest.PytestRemovedIn10Warning",
 ]

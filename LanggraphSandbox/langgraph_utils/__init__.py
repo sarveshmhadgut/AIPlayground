@@ -10,9 +10,9 @@ from termcolor import colored
 
 def display_conversation(messages: list[BaseMessage]):
     for message in messages:
-        print(colored("LLM:", (193, 162, 255), ["bold"])) if isinstance(
-            message, AIMessage
-        ) else print(colored("\nHuman:", (222, 207, 166), ["bold"]))
+        print(colored("LLM:", (193, 162, 255), ["bold"])) if isinstance(message, AIMessage) else print(
+            colored("\nHuman:", (222, 207, 166), ["bold"])
+        )
 
         console.print(Markdown(f"{message.content}\n"))
 

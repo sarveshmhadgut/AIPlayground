@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-langgraph:
-    name: LanggraphSandbox & CRAG
+    name: LanggraphSandbox
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,13 +33,25 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Check code formatting (ruff)
-        run: uvx ruff format --check CRAG/ langgraph_utils/ main.py --exclude Flaude
+        run: uvx ruff format --check corrective_rag/ langgraph_utils/ main.py --exclude Flaude
+
+      - name: Check import sorting (ruff)
+        run: uvx ruff check --select I corrective_rag/ langgraph_utils/ main.py --exclude Flaude
 
       - name: Lint code (ruff)
-        run: uvx ruff check CRAG/ langgraph_utils/ main.py --exclude Flaude
+        run: uvx ruff check corrective_rag/ langgraph_utils/ main.py --exclude Flaude
+
+      - name: Type check (mypy)
+        run: uvx mypy corrective_rag --explicit-package-bases --ignore-missing-imports
+
+      - name: Run unit tests (pytest)
+        env:
+          GOOGLE_API_KEY: "dummy-key-for-ci"
+          LANGCHAIN_API_KEY: "dummy-key-for-ci"
+        run: uv run pytest corrective_rag/tests
 
       - name: Verify Python bytecode compilation
-        run: python3 -m compileall -q CRAG/
+        run: python3 -m compileall -q corrective_rag/ langgraph_utils/ main.py
 
   check-flaude:
     name: Flaude Submodule
