@@ -96,21 +96,66 @@ def main() -> None:
         )
 
     # Render workflow execution outputs to terminal
+    hit_count: int = len(response.get("hit_documents", []))
+    ambiguous_count: int = len(response.get("ambiguous_documents", []))
+    miss_count: int = len(response.get("miss_documents", []))
+    total_retrieved: int = len(response.get("retrieved_documents", []))
+    web_search_triggered: bool = hit_count == 0 or miss_count > 0 or ambiguous_count > 0
+
+    rewritten_rag_query_text: str = str(response.get("rewritten_rag_query", "")).strip()
+
+    print_header("Rewritten RAG Query")
+    if rewritten_rag_query_text:
+        console.print(f"\n{rewritten_rag_query_text}\n")
+    else:
+        console.print("[dim italic]No RAG query rewriting performed (original query used).[/dim italic]\n")
+
     rag_context_text: str = str(response.get("rag_context", "")).strip()
 
     print_header("RAG Context")
     if rag_context_text:
         console.print(f"\n{rag_context_text}\n")
+    elif total_retrieved > 0:
+        console.print(
+            f"[dim italic]Retrieved {total_retrieved} document chunks: "
+            f"{hit_count} hits, {ambiguous_count} ambiguous, {miss_count} misses "
+            "(all discarded as irrelevant under evaluation thresholds).[/dim italic]\n"
+        )
     else:
-        console.print("[dim italic]No RAG context retrieved.[/dim italic]\n")
+        console.print("[dim italic]No documents found in local vector store matching query.[/dim italic]\n")
+
+    rewritten_query_text: str = str(response.get("rewritten_query", "")).strip()
+
+    print_header("Rewritten Web Query")
+    if rewritten_query_text:
+        console.print(f"\n{rewritten_query_text}\n")
+    elif web_search_triggered:
+        console.print("[dim italic]Web query rewriting was triggered but produced no output.[/dim italic]\n")
+    else:
+        console.print(
+            "[dim italic]No web query rewriting required (high-relevance RAG hits were sufficient).[/dim italic]\n"
+        )
 
     web_search_context_text: str = str(response.get("web_search_context", "")).strip()
 
     print_header("Web Search Context")
     if web_search_context_text:
         console.print(f"\n{web_search_context_text}\n")
+    elif web_search_triggered:
+        console.print(
+            "[dim italic]Web search was triggered due to insufficient RAG context, "
+            "but returned 0 results (rate-limited, bot challenge, or query not found).[/dim italic]\n"
+        )
     else:
-        console.print("[dim italic]No web search context required or retrieved.[/dim italic]\n")
+        console.print("[dim italic]No web search required (high-relevance RAG hits were sufficient).[/dim italic]\n")
+
+    refined_context_text: str = str(response.get("refined_context", "")).strip()
+
+    print_header("Refined Context")
+    if refined_context_text:
+        console.print(f"\n{refined_context_text}\n")
+    else:
+        console.print("[dim italic]No refined context generated (input contexts were empty).[/dim italic]\n")
 
     response_text: str = str(response.get("response", "")).strip()
 

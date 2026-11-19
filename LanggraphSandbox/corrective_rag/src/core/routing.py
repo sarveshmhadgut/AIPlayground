@@ -33,7 +33,7 @@ except Exception as e:
     raise MyException(e, sys) from e
 
 
-def ingestion_decision(
+def route_ingestion(
     state: State,
     config: RunnableConfig,
 ) -> Literal["skip_ingestion", "initiate_ingestion"]:
@@ -56,28 +56,29 @@ def ingestion_decision(
         return "skip_ingestion" if use_existing else "initiate_ingestion"
 
     except Exception as e:
-        logging.error(f"Failed to evaluate ingestion_decision: {e}")
+        logging.error(f"Failed to evaluate route_ingestion: {e}")
         raise MyException(e, sys) from e
 
 
-def route_web_search(state: State) -> Literal["generation", "search_web"]:
+def route_web_search(state: State) -> Literal["refinement", "search_web"]:
     """Determine routing path based on evaluated document relevance.
 
     Args:
         state (State): Current graph state containing evaluated document groups.
 
     Returns:
-        Literal["generation", "search_web"]: Route to web search if miss or ambiguous documents exist, else generation.
+        Literal["refinement", "search_web"]: Route to web search if miss or ambiguous documents exist
+            or no hit documents are available, else refinement.
 
     Raises:
         MyException: If routing evaluation fails.
     """
     try:
-        # Core CRAG rule: If any document is classified as miss or ambiguous,
-        # fall back to web search to retrieve fresh external context; otherwise generate directly.
-        if state.get("miss_documents") or state.get("ambiguous_documents"):
+        # Core CRAG rule: If there are no high-relevance hit documents, or if any document
+        # is classified as miss or ambiguous, fall back to web search; otherwise refine directly.
+        if not state.get("hit_documents") or state.get("miss_documents") or state.get("ambiguous_documents"):
             return "search_web"
-        return "generation"
+        return "refinement"
 
     except Exception as e:
         logging.error(f"Failed to evaluate route_web_search: {e}")
@@ -85,6 +86,6 @@ def route_web_search(state: State) -> Literal["generation", "search_web"]:
 
 
 __all__: list[str] = [
-    "ingestion_decision",
+    "route_ingestion",
     "route_web_search",
 ]

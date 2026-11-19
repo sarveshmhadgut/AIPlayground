@@ -1,4 +1,14 @@
+"""
+langgraph_utils: Shared utilities, terminal formatting, and runtime configurations.
+"""
+
 import os
+import sys
+from pathlib import Path
+
+ROOT: Path = Path(__file__).resolve().parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from langchain_core.messages import AIMessage, BaseMessage
 from langchain_core.runnables import RunnableConfig
@@ -8,16 +18,31 @@ from rich.theme import Theme
 from termcolor import colored
 
 
-def display_conversation(messages: list[BaseMessage]):
+def display_conversation(messages: list[BaseMessage]) -> None:
+    """Format and print a conversation history with styled LLM and Human headers.
+
+    Args:
+        messages (list[BaseMessage]): List of conversation messages to render.
+    """
     for message in messages:
-        print(colored("LLM:", (193, 162, 255), ["bold"])) if isinstance(message, AIMessage) else print(
-            colored("\nHuman:", (222, 207, 166), ["bold"])
-        )
+        if isinstance(message, AIMessage):
+            print(colored("LLM:", (193, 162, 255), attrs=["bold"]))
+        else:
+            print(colored("\nHuman:", (222, 207, 166), attrs=["bold"]))
 
         console.print(Markdown(f"{message.content}\n"))
 
 
-def get_config(user_id, thread_id):
+def get_config(user_id: str, thread_id: str) -> RunnableConfig:
+    """Generate a standard RunnableConfig with configurable parameters and metadata.
+
+    Args:
+        user_id (str): Unique user identifier.
+        thread_id (str): Unique conversation thread identifier.
+
+    Returns:
+        RunnableConfig: Configured LangChain runnable configuration.
+    """
     return RunnableConfig(
         {
             "configurable": {"thread_id": thread_id, "user_id": user_id},
@@ -27,8 +52,8 @@ def get_config(user_id, thread_id):
                 "environment": os.getenv("APP_ENV", "default"),
                 "app": "ltm_postgres",
             },
-        },
-        run_name="ltm_postgres_run",
+            "run_name": "ltm_postgres_run",
+        }
     )
 
 
@@ -52,4 +77,11 @@ def get_console() -> Console:
     )
 
 
-console = get_console()
+console: Console = get_console()
+
+__all__: list[str] = [
+    "console",
+    "display_conversation",
+    "get_config",
+    "get_console",
+]

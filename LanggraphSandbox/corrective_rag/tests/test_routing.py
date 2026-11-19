@@ -12,14 +12,14 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.core.routing import (
-    ingestion_decision,
+    route_ingestion,
     route_web_search,
 )
 from src.core.state import State
 
 
-def test_ingestion_decision_skip() -> None:
-    """Test ingestion_decision defaults to skip_ingestion when use_existing is True."""
+def test_route_ingestion_skip() -> None:
+    """Test route_ingestion defaults to skip_ingestion when use_existing is True."""
     state: State = {
         "query": "test query",
         "retrieved_documents": [],
@@ -30,12 +30,12 @@ def test_ingestion_decision_skip() -> None:
         "rag_context": "",
         "response": "",
     }
-    decision = ingestion_decision(state, config={"configurable": {"use_existing": True}})
+    decision = route_ingestion(state, config={"configurable": {"use_existing": True}})
     assert decision == "skip_ingestion"
 
 
-def test_ingestion_decision_initiate() -> None:
-    """Test ingestion_decision routes to initiate_ingestion when use_existing is False."""
+def test_route_ingestion_initiate() -> None:
+    """Test route_ingestion routes to initiate_ingestion when use_existing is False."""
     state: State = {
         "query": "test query",
         "retrieved_documents": [],
@@ -46,12 +46,12 @@ def test_ingestion_decision_initiate() -> None:
         "rag_context": "",
         "response": "",
     }
-    decision = ingestion_decision(state, config={"configurable": {"use_existing": False}})
+    decision = route_ingestion(state, config={"configurable": {"use_existing": False}})
     assert decision == "initiate_ingestion"
 
 
 def test_route_web_search_with_hits() -> None:
-    """Test route_web_search skips web search when hit_documents are present."""
+    """Test route_web_search branches to refinement when only hit_documents are present."""
     document = Document(page_content="Relevant document content.", metadata={"score": 8.5})
     state: State = {
         "query": "test query",
@@ -64,7 +64,7 @@ def test_route_web_search_with_hits() -> None:
         "response": "",
     }
     route = route_web_search(state)
-    assert route == "generation"
+    assert route == "refinement"
 
 
 def test_route_web_search_without_hits() -> None:
@@ -75,6 +75,22 @@ def test_route_web_search_without_hits() -> None:
         "retrieved_documents": [document],
         "hit_documents": [],
         "miss_documents": [document],
+        "ambiguous_documents": [],
+        "web_search_context": "",
+        "rag_context": "",
+        "response": "",
+    }
+    route = route_web_search(state)
+    assert route == "search_web"
+
+
+def test_route_web_search_empty_retrieval() -> None:
+    """Test route_web_search branches to search_web when no documents are retrieved."""
+    state: State = {
+        "query": "test query",
+        "retrieved_documents": [],
+        "hit_documents": [],
+        "miss_documents": [],
         "ambiguous_documents": [],
         "web_search_context": "",
         "rag_context": "",

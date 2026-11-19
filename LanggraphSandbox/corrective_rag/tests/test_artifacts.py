@@ -67,7 +67,10 @@ def test_save_run_artifacts_directory_structure_and_files(tmp_path: Path) -> Non
 
     mock_state: dict[str, object] = {
         "rag_context": "Transformer attention mechanisms have quadratic complexity.",
+        "rewritten_rag_query": "transformer attention quadratic complexity mechanism",
+        "rewritten_query": "transformer attention mamba state space complexity",
         "web_search_context": "Mamba uses structured state spaces (S4) for linear inference.",
+        "refined_context": "Refined synthesis of attention and state space models.",
         "response": "Transformers and Mamba differ fundamentally in computational complexity.",
         "retrieved_documents": [doc_hit, doc_ambiguous, doc_miss],
         "hit_documents": [doc_hit],
@@ -92,8 +95,11 @@ def test_save_run_artifacts_directory_structure_and_files(tmp_path: Path) -> Non
     assert contexts_file.exists()
     contexts_content: str = contexts_file.read_text(encoding="utf-8")
     assert "Query:\nExplain transformer attention and Mamba state space models" in contexts_content
+    assert "Rewritten RAG Query:\ntransformer attention quadratic complexity mechanism" in contexts_content
     assert "RAG Context:\nTransformer attention mechanisms have quadratic complexity." in contexts_content
+    assert "Rewritten Web Query:\ntransformer attention mamba state space complexity" in contexts_content
     assert "Web Search Context:\nMamba uses structured state spaces (S4)" in contexts_content
+    assert "Refined Context:\nRefined synthesis of attention and state space models." in contexts_content
 
     # 2. response directory check
     response_file: Path = run_dirpath / "response" / "response.md"
@@ -107,6 +113,8 @@ def test_save_run_artifacts_directory_structure_and_files(tmp_path: Path) -> Non
     assert metadata_file.exists()
     metadata: dict[str, object] = json.loads(metadata_file.read_text(encoding="utf-8"))
     assert metadata.get("query") == query
+    assert metadata.get("rewritten_rag_query") == "transformer attention quadratic complexity mechanism"
+    assert metadata.get("rewritten_query") == "transformer attention mamba state space complexity"
     assert metadata.get("routing_decision") == "generation"
     counts: dict[str, int] = metadata.get("counts", {})  # type: ignore[assignment]
     assert counts.get("retrieved_documents") == 3

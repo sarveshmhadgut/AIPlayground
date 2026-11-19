@@ -153,9 +153,32 @@ def generate_uuid(
         raise MyException(e, sys) from e
 
 
+def resolve_field(obj: Any, field_name: str, default: str = "") -> str:
+    """Resolve a string field from a BaseModel instance, dictionary, or raw value.
+
+    Args:
+        obj (Any): Target object (BaseModel, dict, or primitive).
+        field_name (str): Attribute name or dictionary key.
+        default (str): Fallback value. Defaults to "".
+
+    Returns:
+        str: Resolved string value.
+    """
+    if hasattr(obj, field_name):
+        value = getattr(obj, field_name, default)
+    elif isinstance(obj, dict):
+        value = obj.get(field_name, default)
+    elif isinstance(obj, str):
+        value = obj
+    else:
+        value = default
+    return str(value).strip() if value else default
+
+
 __all__: list[str] = [
     "build_scoring_rubric",
     "format_documents",
     "generate_uuid",
     "load_yaml_file",
+    "resolve_field",
 ]

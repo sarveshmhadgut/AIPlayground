@@ -17,13 +17,16 @@ from src.core.nodes import (
     evaluation_node,
     generation_node,
     ingestion_node,
+    rag_query_rewriting_node,
+    refinement_node,
     retrieval_node,
     set_rag_engine,
+    web_query_rewriting_node,
     web_search_node,
 )
 from src.core.rag import RAGEngine
 from src.core.routing import (
-    ingestion_decision,
+    route_ingestion,
     route_web_search,
 )
 from src.core.state import State
@@ -55,32 +58,38 @@ def get_workflow(
         graph: StateGraph = StateGraph(State)
 
         graph.add_node("ingestion", ingestion_node)
+        graph.add_node("rag_query_rewriting", rag_query_rewriting_node)
         graph.add_node("retrieval", retrieval_node)
         graph.add_node("evaluation", evaluation_node)
+        graph.add_node("web_query_rewriting", web_query_rewriting_node)
         graph.add_node("web_search", web_search_node)
+        graph.add_node("refinement", refinement_node)
         graph.add_node("generation", generation_node)
 
         graph.add_conditional_edges(
             START,
-            ingestion_decision,
+            route_ingestion,
             {
                 "initiate_ingestion": "ingestion",
-                "skip_ingestion": "retrieval",
+                "skip_ingestion": "rag_query_rewriting",
             },
         )
 
-        graph.add_edge("ingestion", "retrieval")
+        graph.add_edge("ingestion", "rag_query_rewriting")
+        graph.add_edge("rag_query_rewriting", "retrieval")
         graph.add_edge("retrieval", "evaluation")
 
         graph.add_conditional_edges(
             "evaluation",
             route_web_search,
             {
-                "generation": "generation",
-                "search_web": "web_search",
+                "refinement": "refinement",
+                "search_web": "web_query_rewriting",
             },
         )
-        graph.add_edge("web_search", "generation")
+        graph.add_edge("web_query_rewriting", "web_search")
+        graph.add_edge("web_search", "refinement")
+        graph.add_edge("refinement", "generation")
         graph.add_edge("generation", END)
 
         compiled_workflow: CompiledStateGraph = graph.compile()

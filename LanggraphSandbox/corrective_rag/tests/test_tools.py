@@ -13,7 +13,10 @@ ROOT: Path = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.core.tools import web_search
+from src.core.tools import (
+    simplify_search_query,
+    web_search,
+)
 from src.exception import MyException
 
 
@@ -47,7 +50,7 @@ def test_web_search_uses_configured_region() -> None:
     with patcher:
         result: dict[str, Any] = web_search.invoke({"search_query": "Test query"})
 
-        mock_instance.text.assert_called_once_with("Test query", region="us-en", max_results=5)
+        mock_instance.text.assert_called_with("Test query", region="us-en", max_results=5, backend="auto")
         assert result.get("status") == "success"
 
 
@@ -114,3 +117,34 @@ def test_web_search_handles_timeout_error_gracefully() -> None:
         assert result.get("status") == "network_error"
         assert result.get("query") == "timeout test"
         assert result.get("response") == ""
+
+
+def test_simplify_search_query_transformations() -> None:
+    """Test simplify_search_query strips conversational prefixes and question words."""
+    assert simplify_search_query("How does the Jev model work?") == "Jev model"
+    assert simplify_search_query("What is reinforcement learning?") == "reinforcement learning"
+    assert simplify_search_query("Explain the backpropagation algorithm") == "backpropagation algorithm"
+    assert simplify_search_query("Why does dropout prevent overfitting?") == "dropout prevent overfitting"
+    assert simplify_search_query("Transformer architecture") == "Transformer architecture"
+
+
+def test_web_search_retries_with_simplified_query() -> None:
+    """Test web_search falls back to simplified keyword query when raw conversational query fails."""
+    mock_instance = MagicMock()
+    mock_instance.__enter__.return_value = mock_instance
+
+    def mock_text(query: str, **kwargs: Any) -> list[dict[str, str]]:
+        if query == "How does the Jev model work?":
+            raise Exception("No results found.")
+        if query == "Jev model":
+            return [{"body": "The Jev model is a system-one decision model."}]
+        return []
+
+    mock_instance.text.side_effect = mock_text
+
+    with patch("src.core.tools.DDGS", return_value=mock_instance):
+        result: dict[str, Any] = web_search.invoke({"search_query": "How does the Jev model work?"})
+
+        assert result.get("status") == "success"
+        assert result.get("query") == "Jev model"
+        assert "The Jev model is a system-one decision model." in str(result.get("response"))

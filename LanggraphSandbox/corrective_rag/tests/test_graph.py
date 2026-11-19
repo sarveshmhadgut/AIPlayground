@@ -32,9 +32,12 @@ def test_workflow_nodes_presence() -> None:
 
     expected_nodes = {
         "ingestion",
+        "rag_query_rewriting",
         "retrieval",
         "evaluation",
+        "web_query_rewriting",
         "web_search",
+        "refinement",
         "generation",
     }
     assert expected_nodes.issubset(node_names)

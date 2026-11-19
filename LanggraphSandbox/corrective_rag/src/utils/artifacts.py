@@ -218,7 +218,10 @@ def save_run_artifacts(
     run_dirpath.mkdir(parents=True, exist_ok=True)
 
     rag_context: str = str(state.get("rag_context", "")).strip()
+    rewritten_rag_query: str = str(state.get("rewritten_rag_query", "")).strip()
+    rewritten_query: str = str(state.get("rewritten_query", "")).strip()
     web_search_context: str = str(state.get("web_search_context", "")).strip()
+    refined_context: str = str(state.get("refined_context", "")).strip()
     response_text: str = str(state.get("response", "")).strip()
 
     # Persist input query and combined contexts for offline trace inspection
@@ -227,10 +230,16 @@ def save_run_artifacts(
     contexts_content: str = (
         "Query:\n"
         f"{query}\n\n"
+        "Rewritten RAG Query:\n"
+        f"{rewritten_rag_query or 'No RAG query rewriting performed.'}\n\n"
         "RAG Context:\n"
         f"{rag_context or 'No RAG context retrieved.'}\n\n"
+        "Rewritten Web Query:\n"
+        f"{rewritten_query or 'No web query rewriting required or performed.'}\n\n"
         "Web Search Context:\n"
-        f"{web_search_context or 'No web search context required or retrieved.'}\n"
+        f"{web_search_context or 'No web search context required or retrieved.'}\n\n"
+        "Refined Context:\n"
+        f"{refined_context or 'No refined context generated.'}\n"
     )
     with open(contexts_dirpath / "contexts.md", "w", encoding="utf-8") as f:
         f.write(contexts_content)
@@ -254,6 +263,8 @@ def save_run_artifacts(
 
     metadata: dict[str, Any] = {
         "query": query,
+        "rewritten_rag_query": rewritten_rag_query,
+        "rewritten_query": rewritten_query,
         "timestamp": datetime.now().isoformat(),
         "run_dirname": run_dirname,
         "routing_decision": routing_decision,

@@ -15,7 +15,10 @@ if str(ROOT) not in sys.path:
 from src.core.state import (
     DocumentGrade,
     EvaluationSchema,
+    RAGQueryRewritingSchema,
+    RefinementSchema,
     State,
+    WebQueryRewritingSchema,
 )
 
 
@@ -49,17 +52,38 @@ def test_evaluation_schema() -> None:
     assert batch.evaluations[0].score == 9.0
 
 
+def test_rag_query_rewriting_schema() -> None:
+    """Test RAGQueryRewritingSchema instantiation and serialization."""
+    schema = RAGQueryRewritingSchema(rewritten_query="Jev model semantic architecture principles")
+    assert schema.rewritten_query == "Jev model semantic architecture principles"
+
+
+def test_web_query_rewriting_schema() -> None:
+    """Test WebQueryRewritingSchema instantiation and serialization."""
+    schema = WebQueryRewritingSchema(rewritten_query="Jev model AI architecture")
+    assert schema.rewritten_query == "Jev model AI architecture"
+
+
+def test_refinement_schema() -> None:
+    """Test RefinementSchema instantiation and serialization."""
+    schema = RefinementSchema(refined_context="Synthesized factual context.")
+    assert schema.refined_context == "Synthesized factual context."
+
+
 def test_state_typed_dict_keys() -> None:
     """Test State TypedDict annotations contain required keys."""
     annotations = State.__annotations__
     required_keys = {
         "query",
+        "rewritten_rag_query",
+        "rewritten_query",
         "retrieved_documents",
         "hit_documents",
         "miss_documents",
         "ambiguous_documents",
         "web_search_context",
         "rag_context",
+        "refined_context",
         "response",
     }
     assert required_keys.issubset(annotations.keys())

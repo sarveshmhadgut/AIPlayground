@@ -23,13 +23,20 @@ from src.core.rag import RAGEngine
 from src.core.state import (
     DocumentGrade,
     EvaluationSchema,
+    RAGQueryRewritingSchema,
+    RefinementSchema,
     State,
+    WebQueryRewritingSchema,
 )
 from src.core.tools import web_search
 from src.exception import MyException
 from src.logger import logging
 from src.utils.display import get_terminal_width
-from src.utils.helpers import build_scoring_rubric, load_yaml_file
+from src.utils.helpers import (
+    build_scoring_rubric,
+    load_yaml_file,
+    resolve_field,
+)
 
 try:
     load_dotenv()
@@ -64,13 +71,43 @@ try:
     MISS_MAX_THRESHOLD: float = float(EVALUATION_PARAMS.get("miss_max_threshold", 3.5))
     HIT_MIN_THRESHOLD: float = float(EVALUATION_PARAMS.get("hit_min_threshold", 7.5))
 
-    EVALUATION_SYSTEM_PROMPT: str = str(PROMPTS.get("document_evaluation", {}).get("system", ""))
-    EVALUATION_USER_PROMPT: str = str(PROMPTS.get("document_evaluation", {}).get("user", "{query}"))
+    EVALUATION_SYSTEM_PROMPT: str = str(PROMPTS.get("evaluation", {}).get("system", ""))
+    EVALUATION_USER_PROMPT: str = str(PROMPTS.get("evaluation", {}).get("user", "{query}"))
 
     EVALUATION_PROMPT_TEMPLATE: ChatPromptTemplate = ChatPromptTemplate.from_messages(
         [
             ("system", EVALUATION_SYSTEM_PROMPT),
             ("user", EVALUATION_USER_PROMPT),
+        ]
+    )
+
+    RAG_QUERY_REWRITING_SYSTEM_PROMPT: str = str(PROMPTS.get("rag_query_rewriting", {}).get("system", ""))
+    RAG_QUERY_REWRITING_USER_PROMPT: str = str(PROMPTS.get("rag_query_rewriting", {}).get("user", "{query}"))
+
+    RAG_QUERY_REWRITING_PROMPT_TEMPLATE: ChatPromptTemplate = ChatPromptTemplate.from_messages(
+        [
+            ("system", RAG_QUERY_REWRITING_SYSTEM_PROMPT),
+            ("user", RAG_QUERY_REWRITING_USER_PROMPT),
+        ]
+    )
+
+    WEB_QUERY_REWRITING_SYSTEM_PROMPT: str = str(PROMPTS.get("web_query_rewriting", {}).get("system", ""))
+    WEB_QUERY_REWRITING_USER_PROMPT: str = str(PROMPTS.get("web_query_rewriting", {}).get("user", "{query}"))
+
+    WEB_QUERY_REWRITING_PROMPT_TEMPLATE: ChatPromptTemplate = ChatPromptTemplate.from_messages(
+        [
+            ("system", WEB_QUERY_REWRITING_SYSTEM_PROMPT),
+            ("user", WEB_QUERY_REWRITING_USER_PROMPT),
+        ]
+    )
+
+    REFINEMENT_SYSTEM_PROMPT: str = str(PROMPTS.get("refinement", {}).get("system", ""))
+    REFINEMENT_USER_PROMPT: str = str(PROMPTS.get("refinement", {}).get("user", "{query}"))
+
+    REFINEMENT_PROMPT_TEMPLATE: ChatPromptTemplate = ChatPromptTemplate.from_messages(
+        [
+            ("system", REFINEMENT_SYSTEM_PROMPT),
+            ("user", REFINEMENT_USER_PROMPT),
         ]
     )
 
@@ -135,6 +172,43 @@ def ingestion_node(
         raise MyException(e, sys) from e
 
 
+def rag_query_rewriting_node(
+    state: State,
+    config: RunnableConfig | None = None,
+) -> dict[str, Any]:
+    """Rewrite conversational user query into semantic keywords optimized for vector retrieval.
+
+    Args:
+        state (State): Current graph state containing the user query.
+        config (RunnableConfig | None): Runtime configuration for tracing propagation.
+
+    Returns:
+        dict[str, Any]: State update containing rewritten_rag_query.
+
+    Raises:
+        MyException: If query rewriting fails.
+    """
+    try:
+        query: str = state.get("query", "")
+        if not query:
+            return {"rewritten_rag_query": ""}
+
+        structured_rag_query_rewriting_model: Runnable[Any, Any] = MODEL.with_structured_output(
+            schema=RAGQueryRewritingSchema
+        )
+        rewrite_chain = (RAG_QUERY_REWRITING_PROMPT_TEMPLATE | structured_rag_query_rewriting_model).with_config(
+            run_name="rag_query_rewriting"
+        )
+
+        result: Any = rewrite_chain.invoke({"query": query}, config=config)
+        rewritten_rag_query: str = resolve_field(result, "rewritten_query", default=query)
+        return {"rewritten_rag_query": rewritten_rag_query}
+
+    except Exception as e:
+        logging.error(f"Failed to execute rag_query_rewriting_node: {e}")
+        raise MyException(e, sys) from e
+
+
 def retrieval_node(
     state: State,
     config: RunnableConfig | None = None,
@@ -142,7 +216,7 @@ def retrieval_node(
     """Retrieve relevant context for the query using the centralized RAGEngine.
 
     Args:
-        state (State): Current graph state containing the query.
+        state (State): Current graph state containing the query or rewritten_rag_query.
         config (RunnableConfig | None): Runtime configuration for tracing propagation.
 
     Returns:
@@ -152,9 +226,10 @@ def retrieval_node(
         MyException: If vector retrieval fails.
     """
     try:
+        query: str = state.get("rewritten_rag_query") or state.get("query", "")
         retriever: VectorStoreRetriever = RAG_ENGINE.get_retriever()
         retrieved_documents: list[Document] = retriever.invoke(
-            state.get("query", ""),
+            query,
             config={"run_name": "vectorstore_retrieval"},
         )
         return {
@@ -192,9 +267,8 @@ def evaluation_node(
             }
 
         structured_evaluation_model: Runnable[Any, Any] = MODEL.with_structured_output(schema=EvaluationSchema)
-        evaluation_chain: Runnable[dict[str, Any], Any] = (
-            EVALUATION_PROMPT_TEMPLATE | structured_evaluation_model
-        ).with_config(run_name="document_evaluation")
+        eval_runnable = EVALUATION_PROMPT_TEMPLATE | structured_evaluation_model
+        evaluation_chain: Runnable[dict[str, Any], Any] = eval_runnable.with_config(run_name="evaluation")
 
         configurable: dict[str, Any] = config.get("configurable", {}) if config else {}
         hit_min_threshold: float = float(configurable.get("hit_min_threshold", HIT_MIN_THRESHOLD))
@@ -206,10 +280,10 @@ def evaluation_node(
             miss_max_threshold=miss_max_threshold,
         )
 
-        numbered_chunks: list[str] = [
-            f"[Document {index}]\n{getattr(document, 'page_content', str(document))}"
-            for index, document in enumerate(retrieved_documents, start=1)
-        ]
+        numbered_chunks: list[str] = []
+        for index, document in enumerate(retrieved_documents, start=1):
+            doc_text = getattr(document, "page_content", str(document))
+            numbered_chunks.append(f"[Document {index}]\n{doc_text}")
         documents_text: str = "\n\n".join(numbered_chunks)
 
         result: EvaluationSchema = evaluation_chain.invoke(
@@ -222,11 +296,10 @@ def evaluation_node(
         )
 
         evaluations: list[DocumentGrade] = getattr(result, "evaluations", []) or []
-        score_map: dict[int, float] = {
-            item.document_index: float(item.score)
-            for item in evaluations
-            if getattr(item, "document_index", None) is not None
-        }
+        score_map: dict[int, float] = {}
+        for item in evaluations:
+            if getattr(item, "document_index", None) is not None:
+                score_map[item.document_index] = float(item.score)
 
         hit_documents: list[Document] = []
         miss_documents: list[Document] = []
@@ -258,6 +331,43 @@ def evaluation_node(
         raise MyException(e, sys) from e
 
 
+def web_query_rewriting_node(
+    state: State,
+    config: RunnableConfig | None = None,
+) -> dict[str, Any]:
+    """Rewrite conversational query into search-optimized keywords for web search.
+
+    Args:
+        state (State): Current graph state containing the user query.
+        config (RunnableConfig | None): Runtime configuration for tracing propagation.
+
+    Returns:
+        dict[str, Any]: State update containing rewritten_query.
+
+    Raises:
+        MyException: If query rewriting fails.
+    """
+    try:
+        query: str = state.get("query", "")
+        if not query:
+            return {"rewritten_query": ""}
+
+        structured_web_query_rewriting_model: Runnable[Any, Any] = MODEL.with_structured_output(
+            schema=WebQueryRewritingSchema
+        )
+        rewrite_chain = (WEB_QUERY_REWRITING_PROMPT_TEMPLATE | structured_web_query_rewriting_model).with_config(
+            run_name="web_query_rewriting"
+        )
+
+        result: Any = rewrite_chain.invoke({"query": query}, config=config)
+        rewritten_query: str = resolve_field(result, "rewritten_query", default=query)
+        return {"rewritten_query": rewritten_query}
+
+    except Exception as e:
+        logging.error(f"Failed to execute web_query_rewriting_node: {e}")
+        raise MyException(e, sys) from e
+
+
 def web_search_node(
     state: State,
     config: RunnableConfig | None = None,
@@ -265,7 +375,7 @@ def web_search_node(
     """Execute web search to augment context when retrieved documents are insufficient.
 
     Args:
-        state (State): Current graph state containing the user query and context.
+        state (State): Current graph state containing the user query, rewritten_query, and context.
         config (RunnableConfig | None): Runtime configuration for tracing propagation.
 
     Returns:
@@ -275,7 +385,7 @@ def web_search_node(
         MyException: If web search execution fails.
     """
     try:
-        query: str = state.get("query", "")
+        query: str = state.get("rewritten_query") or state.get("query", "")
         search_result: dict[str, Any] = web_search.invoke(
             {"search_query": query},
             config={"run_name": "duckduckgo_web_search"},
@@ -293,10 +403,10 @@ def generation_node(
     state: State,
     config: RunnableConfig | None = None,
 ) -> dict[str, Any]:
-    """Node that generates the final response using RAG context, web search context, and query.
+    """Node that generates the final response using refined context and query.
 
     Args:
-        state (State): Current graph state containing rag_context, web_search_context, and query.
+        state (State): Current graph state containing refined_context and query.
         config (RunnableConfig | None): Runtime configuration for tracing propagation.
 
     Returns:
@@ -306,14 +416,12 @@ def generation_node(
         MyException: If generation chain fails.
     """
     try:
-        generation_chain: Runnable[dict[str, Any], str] = (GENERATION_PROMPT_TEMPLATE | MODEL | PARSER).with_config(
-            run_name="llm_generation"
-        )
+        generation_runnable = GENERATION_PROMPT_TEMPLATE | MODEL | PARSER
+        generation_chain: Runnable[dict[str, Any], str] = generation_runnable.with_config(run_name="llm_generation")
 
         model_response: str = generation_chain.invoke(
             {
-                "rag_context": state.get("rag_context", ""),
-                "web_search_context": state.get("web_search_context", ""),
+                "refined_context": state.get("refined_context", ""),
                 "query": state.get("query", ""),
             },
             config=config,
@@ -325,11 +433,59 @@ def generation_node(
         raise MyException(e, sys) from e
 
 
+def refinement_node(
+    state: State,
+    config: RunnableConfig | None = None,
+) -> dict[str, Any]:
+    """Refine combined RAG and Web search context into dense, query-relevant context.
+
+    Args:
+        state (State): Current graph state containing query, rag_context, and web_search_context.
+        config (RunnableConfig | None): Runtime configuration for tracing propagation.
+
+    Returns:
+        dict[str, Any]: State update containing refined_context.
+
+    Raises:
+        MyException: If context refinement fails.
+    """
+    try:
+        query: str = state.get("query", "")
+        rag_context: str = state.get("rag_context", "")
+        web_search_context: str = state.get("web_search_context", "")
+
+        combined_context: str = f"{rag_context}\n\n{web_search_context}".strip()
+        if not combined_context:
+            return {"refined_context": ""}
+
+        structured_refinement_model: Runnable[Any, Any] = MODEL.with_structured_output(schema=RefinementSchema)
+        refinement_runnable = REFINEMENT_PROMPT_TEMPLATE | structured_refinement_model
+        refinement_chain: Runnable[dict[str, Any], Any] = refinement_runnable.with_config(run_name="context_refinement")
+
+        result: Any = refinement_chain.invoke(
+            {
+                "combined_context": combined_context,
+                "query": query,
+            },
+            config=config,
+        )
+
+        refined_context: str = resolve_field(result, "refined_context")
+        return {"refined_context": refined_context}
+
+    except Exception as e:
+        logging.error(f"Failed to execute refinement_node: {e}")
+        raise MyException(e, sys) from e
+
+
 __all__: list[str] = [
     "evaluation_node",
     "generation_node",
     "ingestion_node",
+    "rag_query_rewriting_node",
+    "refinement_node",
     "retrieval_node",
     "set_rag_engine",
+    "web_query_rewriting_node",
     "web_search_node",
 ]

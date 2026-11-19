@@ -18,6 +18,7 @@ from src.utils.helpers import (
     format_documents,
     generate_uuid,
     load_yaml_file,
+    resolve_field,
 )
 
 
@@ -67,3 +68,26 @@ def test_load_yaml_file_missing_returns_empty_dict(tmp_path: Path) -> None:
     missing_path = tmp_path / "non_existent.yml"
     result = load_yaml_file(missing_path)
     assert result == {}
+
+
+def test_resolve_field_from_dict() -> None:
+    """Test resolve_field resolves field value from dictionary."""
+    data = {"rewritten_query": "Jev model architecture"}
+    assert resolve_field(data, "rewritten_query") == "Jev model architecture"
+    assert resolve_field(data, "missing_field", default="fallback") == "fallback"
+
+
+def test_resolve_field_from_object() -> None:
+    """Test resolve_field resolves attribute from object with hasattr."""
+
+    class SampleObj:
+        refined_context = "Extracted context snippet."
+
+    assert resolve_field(SampleObj(), "refined_context") == "Extracted context snippet."
+    assert resolve_field(SampleObj(), "missing_attr", default="def") == "def"
+
+
+def test_resolve_field_from_primitive() -> None:
+    """Test resolve_field gracefully falls back on string or None primitives."""
+    assert resolve_field("raw string output", "any_field") == "raw string output"
+    assert resolve_field(None, "any_field", default="default_val") == "default_val"

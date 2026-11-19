@@ -2,6 +2,7 @@
 tools.py: External tool definitions for web search and retrieval augmentation.
 """
 
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -61,6 +62,73 @@ except Exception as e:
     raise MyException(e, sys) from e
 
 
+QUESTION_PREFIX_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(
+        r"^(?:how\s+(?:does|do|can|is|are)\s+(?:the\s+)?|what\s+(?:is|are)\s+(?:the\s+)?|"
+        r"why\s+(?:is|are|do|does)\s+(?:the\s+)?|tell\s+me\s+about\s+(?:the\s+)?|"
+        r"explain\s+(?:the\s+)?|describe\s+(?:the\s+)?)",
+        re.IGNORECASE,
+    ),
+    re.compile(r"(?:\s+work|\s+function|\s+operate|\s+meaning)?\s*\?*$", re.IGNORECASE),
+)
+
+
+def simplify_search_query(query: str) -> str:
+    """Simplify a conversational natural language query into concise search keywords.
+
+    Args:
+        query (str): The raw conversational query text.
+
+    Returns:
+        str: Cleaned search keywords optimized for search engines.
+    """
+    clean_query: str = query.strip()
+    for pattern in QUESTION_PREFIX_PATTERNS:
+        clean_query = pattern.sub("", clean_query).strip()
+    clean_query = re.sub(r"[^\w\s-]", " ", clean_query)
+    clean_query = re.sub(r"\s+", " ", clean_query).strip()
+    return clean_query if clean_query else query
+
+
+def _query_ddgs(
+    search_query: str,
+    region: str,
+    max_results: int,
+    backend: str = "auto",
+) -> str:
+    """Execute raw DDGS query and extract text snippets.
+
+    Args:
+        search_query (str): The search query.
+        region (str): Region code.
+        max_results (int): Max search results.
+        backend (str): Search backend (e.g. 'auto', 'lite').
+
+    Returns:
+        str: Extracted search snippets joined by newlines.
+    """
+    with DDGS() as ddgs:
+        raw_results: Any = ddgs.text(
+            search_query,
+            region=region,
+            max_results=max_results,
+            backend=backend,
+        )
+
+    if isinstance(raw_results, str):
+        return raw_results.strip()
+    if isinstance(raw_results, list):
+        snippets: list[str] = [
+            str(item.get("body", item.get("description", item))).strip()
+            if isinstance(item, dict)
+            else str(item).strip()
+            for item in raw_results
+            if item
+        ]
+        return "\n\n".join(snippet for snippet in snippets if snippet)
+    return str(raw_results).strip() if raw_results is not None else ""
+
+
 @tool(name_or_callable="web_search")
 def web_search(search_query: str) -> dict[str, Any]:
     """Search the web for information related to a query using DuckDuckGo.
@@ -81,20 +149,54 @@ def web_search(search_query: str) -> dict[str, Any]:
         region: str = str(web_search_config.get("region", REGION))
         max_results: int = int(web_search_config.get("max_results", MAX_RESULTS))
 
-        with DDGS() as ddgs:
-            raw_results: Any = ddgs.text(search_query, region=region, max_results=max_results)
+        candidate_queries: list[str] = [search_query]
+        simplified: str = simplify_search_query(search_query)
+        if simplified and simplified.lower() != search_query.lower():
+            candidate_queries.append(simplified)
 
-        if isinstance(raw_results, str):
-            response_text: str = raw_results.strip()
-        elif isinstance(raw_results, list):
-            snippets: list[str] = [
-                str(item.get("body", item)).strip() if isinstance(item, dict) else str(item).strip()
-                for item in raw_results
-                if item
-            ]
-            response_text = "\n\n".join(snippet for snippet in snippets if snippet)
-        else:
-            response_text = str(raw_results).strip() if raw_results is not None else ""
+        response_text: str = ""
+        successful_query: str = search_query
+        last_network_error: Exception | None = None
+
+        for query_candidate in candidate_queries:
+            for backend in ("auto", "lite"):
+                try:
+                    response_text = _query_ddgs(
+                        search_query=query_candidate,
+                        region=region,
+                        max_results=max_results,
+                        backend=backend,
+                    )
+                    if response_text and not any(
+                        indicator in response_text.lower() for indicator in NO_RESULTS_INDICATORS
+                    ):
+                        successful_query = query_candidate
+                        last_network_error = None
+                        break
+                except Exception as ex:
+                    err_lower: str = str(ex).lower()
+                    if any(indicator in err_lower for indicator in NO_RESULTS_INDICATORS):
+                        continue
+                    if any(indicator in err_lower for indicator in TRANSIENT_NETWORK_INDICATORS):
+                        last_network_error = ex
+                        continue
+                    raise ex
+
+            if response_text and not any(indicator in response_text.lower() for indicator in NO_RESULTS_INDICATORS):
+                break
+
+        # If network failures occurred and no successful response was obtained, report network_error
+        if not response_text and last_network_error is not None:
+            logging.warning(
+                f"Web search encountered transient network failure for query '{search_query}': {last_network_error}. "
+                "Gracefully returning empty search context."
+            )
+            return {
+                "status": "network_error",
+                "query": search_query,
+                "response": "",
+                "error": str(last_network_error),
+            }
 
         # Gracefully treat empty search results or negative indicator strings as empty context
         if not response_text or any(indicator in response_text.lower() for indicator in NO_RESULTS_INDICATORS):
@@ -105,10 +207,10 @@ def web_search(search_query: str) -> dict[str, Any]:
                 "response": "",
             }
 
-        logging.info(f"Finished executing web_search tool for {search_query}.")
+        logging.info(f"Finished executing web_search tool for {successful_query}.")
         return {
             "status": "success",
-            "query": search_query,
+            "query": successful_query,
             "response": response_text,
         }
 
@@ -140,5 +242,6 @@ def web_search(search_query: str) -> dict[str, Any]:
 
 
 __all__: list[str] = [
+    "simplify_search_query",
     "web_search",
 ]
