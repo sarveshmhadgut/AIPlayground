@@ -176,7 +176,7 @@ def rag_query_rewriting_node(
     state: State,
     config: RunnableConfig | None = None,
 ) -> dict[str, Any]:
-    """Rewrite conversational user query into semantic keywords optimized for vector retrieval.
+    """Rewrite conversational user query into a coherent semantic query optimized for dense vector retrieval.
 
     Args:
         state (State): Current graph state containing the user query.

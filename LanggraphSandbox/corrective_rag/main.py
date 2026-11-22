@@ -46,7 +46,7 @@ try:
     LLM_CONFIG: dict[str, Any] = PARAMS.get("llm", {})
     LLM_MODEL: str = str(LLM_CONFIG.get("model", "gemini-3.8-flash"))
 
-    DEFAULT_QUERY: str = "How does the Jev model work?"
+    DEFAULT_QUERY: str = "How does Reinforcement Learning from Human Feedback (RLHF) work?"
 
 except Exception as e:
     logging.info(f"Failed to initialize main module dependencies: {e}")
@@ -71,9 +71,6 @@ def main() -> None:
         query = DEFAULT_QUERY
     except KeyboardInterrupt:
         query = DEFAULT_QUERY
-
-    print_header("Query", text_color="yellow", line_color="grey")
-    console.print(f"{query}\n" if query else "\n[dim italic]Query not found.[/dim italic]\n")
 
     workflow: CompiledStateGraph = get_workflow(save_workflow_file=True)
     with console.status("Generating Response..."):

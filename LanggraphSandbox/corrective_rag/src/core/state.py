@@ -49,9 +49,9 @@ class RAGQueryRewritingSchema(BaseModel):
 
     rewritten_query: str = Field(
         description=(
-            "Semantic retrieval query optimized for dense vector similarity search. "
-            "Formulated by expanding core technical concepts, domain entities, and key terms while "
-            "stripping conversational filler to maximize embedding cosine similarity against document chunks."
+            "Semantic retrieval query formulated as a cohesive, grammatically sound natural language question "
+            "or statement optimized for dense vector cosine similarity. Strips conversational filler while "
+            "preserving exact technical entities and acronyms without keyword stuffing or speculative domain expansion."
         )
     )
 
@@ -61,9 +61,9 @@ class WebQueryRewritingSchema(BaseModel):
 
     rewritten_query: str = Field(
         description=(
-            "Search-engine-optimized (SEO) keyword query. Formatted with 3 to 6 high-intent, "
-            "disambiguated search terms, stripped of conversational filler, stop words, and punctuation, "
-            "anchored with domain identifiers to maximize search engine retrieval precision."
+            "Search-engine-optimized (SEO) keyword query consisting of 3 to 6 high-intent, "
+            "focused search terms, stripped of conversational filler, stop words, and punctuation, "
+            "preserving exact entity names without speculative domain guessing."
         )
     )
 
