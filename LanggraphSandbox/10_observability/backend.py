@@ -1,27 +1,26 @@
 # imports & setups
-import yaml
 import operator
 from pathlib import Path
+from typing import Annotated, TypedDict
+
+import yaml
 from dotenv import load_dotenv
-from langsmith import traceable
-from utils.config import get_conn, get_llm
-from typing import TypedDict, Annotated, List
-from langgraph.graph import StateGraph, START, END
+from langchain_core.messages import AIMessage, BaseMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.sqlite import SqliteSaver
-from langchain_core.messages import BaseMessage, AIMessage
+from langgraph.graph import END, START, StateGraph
+from langsmith import traceable
+from utils.config import get_conn, get_llm
 
 load_dotenv()
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent / "configs/params.yaml").read_text()
-)
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
 # model
 model = get_llm(params=PARAMS_CONFIGS["llm"])
 
 
 # state
 class MessageState(TypedDict):
-    messages: Annotated[List[BaseMessage], operator.add]
+    messages: Annotated[list[BaseMessage], operator.add]
 
 
 @traceable(name="chat_node")

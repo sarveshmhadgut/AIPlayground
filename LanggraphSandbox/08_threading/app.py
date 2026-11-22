@@ -1,7 +1,8 @@
 # imports & setups
 import uuid
-import streamlit as st
 from pathlib import Path
+
+import streamlit as st
 from backend import workflow as llm
 from chat_title_generator import generate_title
 from langchain_core.messages import HumanMessage
@@ -73,9 +74,7 @@ for message in st.session_state["messages"]:
             st.write(message["content"])
 
 # sidebar
-if st.sidebar.button(
-    "New Conversation", key="btn_new_chat", type="primary", use_container_width=True
-):
+if st.sidebar.button("New Conversation", key="btn_new_chat", type="primary", use_container_width=True):
     new_conversation()
 
 # sidebar
@@ -85,9 +84,7 @@ for thread in reversed(st.session_state["threads"]):
     if st.sidebar.button(title, key=f"btn_{thread}", use_container_width=True):
         st.session_state["current_thread"] = thread
 
-        conversation_history = load_conversation_history(
-            thread_id=st.session_state["current_thread"]
-        )
+        conversation_history = load_conversation_history(thread_id=st.session_state["current_thread"])
 
         previous_messages = []
         for message in conversation_history:
@@ -107,9 +104,7 @@ if user_input:
     st.session_state["messages"].append({"role": "user", "content": user_input})
 
     with st.chat_message("user"):
-        st.markdown(
-            f'<div class="user-message">{user_input}</div>', unsafe_allow_html=True
-        )
+        st.markdown(f'<div class="user-message">{user_input}</div>', unsafe_allow_html=True)
 
     config = {"configurable": {"thread_id": st.session_state["current_thread"]}}
     with st.chat_message("assistant"):
@@ -126,7 +121,5 @@ if user_input:
     st.session_state["messages"].append({"role": "assistant", "content": ai_message})
     if not st.session_state["thread_mapping"].get(st.session_state["current_thread"]):
         new_title = generate_title(st.session_state["messages"][:2])
-        st.session_state["thread_mapping"][st.session_state["current_thread"]] = (
-            new_title
-        )
+        st.session_state["thread_mapping"][st.session_state["current_thread"]] = new_title
         st.rerun()

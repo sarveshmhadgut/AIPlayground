@@ -1,24 +1,23 @@
 # imports & setups
 import os
-import yaml
-import streamlit as st
 from pathlib import Path
-from dotenv import load_dotenv, find_dotenv
+
+import streamlit as st
+import yaml
+from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv(), override=True)
 
 
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent / "configs/params.yaml").read_text()
-)
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
 os.environ["LANGCHAIN_PROJECT"] = PARAMS_CONFIGS["LANGSMITH_PROJECT"]
 os.environ["LANGCHAIN_TRACING_V2"] = str(PARAMS_CONFIGS["LANGCHAIN_TRACING_V2"]).lower()
 
-from utils.sidebar import render_sidebar
-from utils.session import new_conversation, init_session
 from utils.chat import display_messages, handle_input
 from utils.config import load_css
-from utils.database import load_thread_mapping, load_conversations
+from utils.database import load_conversations, load_thread_mapping
+from utils.session import init_session, new_conversation
+from utils.sidebar import render_sidebar
 
 style_css = load_css(filepath=Path(PARAMS_CONFIGS["files"]["css_filepath"]))
 
@@ -29,17 +28,13 @@ if style_css:
 st.markdown("<h1>Flaude</h1>", unsafe_allow_html=True)
 
 # init params
-init_session(
-    load_conversations=load_conversations, load_thread_mapping=load_thread_mapping
-)
+init_session(load_conversations=load_conversations, load_thread_mapping=load_thread_mapping)
 
 # display current conversation messages
 display_messages(st.session_state["messages"])
 
 # new chat button
-if st.sidebar.button(
-    "New Conversation", key="btn_new_chat", type="primary", use_container_width=True
-):
+if st.sidebar.button("New Conversation", key="btn_new_chat", type="primary", use_container_width=True):
     new_conversation()
 
 # render sidebar

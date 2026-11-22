@@ -31,7 +31,7 @@ LanggraphSandbox/
 
 ### 1. Prerequisites
 
-Make sure you have Python 3.11 or higher installed. This project uses `uv` for dependency management:
+Make sure you have Python 3.14 or higher installed as specified in `.python-version`. This project uses `uv` for dependency management:
 
 ```bash
 pip install uv

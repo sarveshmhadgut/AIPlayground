@@ -1,22 +1,21 @@
 # imports & setups
-import yaml
 import operator
 from pathlib import Path
+from typing import Annotated, TypedDict
+
+import yaml
 from dotenv import load_dotenv
-from langsmith import traceable
-from utils.tools import available_tools
-from utils.config import get_conn, get_llm
-from typing import TypedDict, Annotated, List
 from langchain_core.messages import BaseMessage
-from langgraph.graph import StateGraph, START
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.graph import START, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
+from langsmith import traceable
+from utils.config import get_conn, get_llm
+from utils.tools import available_tools
 
 load_dotenv()
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
-)
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
 
 # model
 model = get_llm(params=PARAMS_CONFIGS["llm"])
@@ -25,7 +24,7 @@ bound_model = model.bind_tools(available_tools)
 
 # state
 class MessageState(TypedDict):
-    messages: Annotated[List[BaseMessage], operator.add]
+    messages: Annotated[list[BaseMessage], operator.add]
 
 
 # utility functions

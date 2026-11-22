@@ -1,15 +1,14 @@
 import os
-import yaml
-import requests
 from pathlib import Path
-from sympy import sympify
-from dotenv import load_dotenv
-from langchain_core.tools import tool
-from langchain_community.tools import DuckDuckGoSearchRun
 
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
-)
+import requests
+import yaml
+from dotenv import load_dotenv
+from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_core.tools import tool
+from sympy import sympify
+
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
 
 load_dotenv()
 EXCHANGE_RATE_KEY = os.getenv("EXCHANGE_RATE_KEY")
@@ -85,9 +84,7 @@ def file_search(filename: str):
         return {
             "status": "success",
             "filename": filename,
-            "contents": "\n\n".join(contents)
-            if contents
-            else "No matching files found.",
+            "contents": "\n\n".join(contents) if contents else "No matching files found.",
         }
 
     except Exception:

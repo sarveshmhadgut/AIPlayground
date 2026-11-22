@@ -1,21 +1,20 @@
 # imports & setups
-import os
-import yaml
-import sqlite3
 import operator
+import os
+import sqlite3
 from pathlib import Path
-from dotenv import load_dotenv
-from typing import TypedDict, Annotated, List
-from langgraph.graph import StateGraph, START, END
-from langchain_core.runnables import RunnableConfig
-from langgraph.checkpoint.sqlite import SqliteSaver
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.messages import BaseMessage, AIMessage
+from typing import Annotated, TypedDict
 
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent / "configs/params.yaml").read_text()
-)
+import yaml
+from dotenv import load_dotenv
+from langchain_core.messages import AIMessage, BaseMessage
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnableConfig
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.graph import END, START, StateGraph
+
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
 load_dotenv()
 
 # checkpointer
@@ -25,12 +24,7 @@ checkpointer = SqliteSaver(conn=conn)
 
 
 def load_db_conversations():
-    threads = list(
-        {
-            checkpoint.config["configurable"]["thread_id"]
-            for checkpoint in checkpointer.list(None)
-        }
-    )
+    threads = list({checkpoint.config["configurable"]["thread_id"] for checkpoint in checkpointer.list(None)})
 
     return threads
 
@@ -42,7 +36,7 @@ parser = StrOutputParser()
 
 # state
 class MessageState(TypedDict):
-    messages: Annotated[List[BaseMessage], operator.add]
+    messages: Annotated[list[BaseMessage], operator.add]
 
 
 def chat(state: MessageState, config: RunnableConfig):

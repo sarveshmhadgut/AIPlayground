@@ -1,11 +1,12 @@
 import os
-import yaml
-import requests
 from pathlib import Path
-from sympy import sympify
+
+import requests
+import yaml
 from dotenv import load_dotenv
-from langchain_core.tools import tool
 from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_core.tools import tool
+from sympy import sympify
 
 load_dotenv()
 PARAMS_CONFIGS = yaml.safe_load(Path("configs/params.yaml").read_text())
@@ -99,9 +100,7 @@ def file_search(filename: str):
         return {
             "status": "success",
             "filename": filename,
-            "contents": "\n\n".join(contents)
-            if contents
-            else "No matching files found.",
+            "contents": "\n\n".join(contents) if contents else "No matching files found.",
         }
 
     except Exception:
@@ -116,7 +115,8 @@ def file_search(filename: str):
 def get_conversion_rate(base_currency: str, target_currency: str):
     """
     Retrieve the current exchange rate between two currencies.
-    This tool must be used whenever an up-to-date currency conversion or exchange rate is required. Never estimate or approximate exchange rates.
+    This tool must be used whenever an up-to-date currency conversion or exchange rate is required.
+    Never estimate or approximate exchange rates.
 
     Args:
         base_currency: The source currency code (e.g., "GBP").

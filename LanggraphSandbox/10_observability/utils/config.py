@@ -1,17 +1,14 @@
 import os
-import yaml
 import sqlite3
 from pathlib import Path
+
+import yaml
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableConfig
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.output_parsers import StrOutputParser
 
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
-)
-PROMPTS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent.parent / "configs/prompts.yaml").read_text()
-)
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
+PROMPTS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/prompts.yaml").read_text())
 
 
 # primitives

@@ -1,19 +1,18 @@
 # imports & setups
-import yaml
 import operator
 from pathlib import Path
-from dotenv import load_dotenv
-from typing import TypedDict, Annotated, List
-from langgraph.graph import StateGraph, START, END
-from langchain_core.runnables import RunnableConfig
-from langgraph.checkpoint.memory import InMemorySaver
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.messages import BaseMessage, AIMessage
+from typing import Annotated, TypedDict
 
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent / "configs/params.yaml").read_text()
-)
+import yaml
+from dotenv import load_dotenv
+from langchain_core.messages import AIMessage, BaseMessage
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnableConfig
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.graph import END, START, StateGraph
+
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent / "configs/params.yaml").read_text())
 load_dotenv()
 
 # model & parser
@@ -23,7 +22,7 @@ parser = StrOutputParser()
 
 # state
 class MessageState(TypedDict):
-    messages: Annotated[List[BaseMessage], operator.add]
+    messages: Annotated[list[BaseMessage], operator.add]
 
 
 def chat(state: MessageState, config: RunnableConfig):

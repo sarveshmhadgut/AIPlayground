@@ -1,15 +1,16 @@
 # Imports & Setups
-import os
-import yaml
 import operator
+import os
 from pathlib import Path
-from termcolor import colored
+from typing import Annotated, TypedDict
+
+import yaml
 from dotenv import load_dotenv
-from langgraph.graph import StateGraph, START, END
-from typing import TypedDict, List, Annotated, Literal
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.messages import SystemMessage, AIMessage, HumanMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langgraph.graph import END, START, StateGraph
+from termcolor import colored
 
 load_dotenv()
 
@@ -39,7 +40,7 @@ llm = get_llm()
 
 # state
 class ChatState(TypedDict):
-    messages: Annotated[List, operator.add]
+    messages: Annotated[list, operator.add]
     exit: bool
 
 

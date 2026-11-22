@@ -1,20 +1,16 @@
 import os
-import streamlit as st
 from pathlib import Path
-from utils.rag import ingestion_pipeline
+
+import streamlit as st
 from langgraph.checkpoint.sqlite import SqliteSaver
-from utils.config import get_conn, PARAMS_CONFIGS, PROMPTS_CONFIGS
+from utils.config import PARAMS_CONFIGS, PROMPTS_CONFIGS, get_conn
+from utils.rag import ingestion_pipeline
 
 
 def load_conversations():
     conn = get_conn(PARAMS_CONFIGS["files"]["chat_db_filepath"])
     checkpointer = SqliteSaver(conn=conn)
-    threads = list(
-        {
-            checkpoint.config["configurable"]["thread_id"]
-            for checkpoint in checkpointer.list(None)
-        }
-    )
+    threads = list({checkpoint.config["configurable"]["thread_id"] for checkpoint in checkpointer.list(None)})
     return threads
 
 
@@ -43,9 +39,7 @@ def save_row(thread_id, thread_name):
 
 def save_file(file):
     if file:
-        FILES_DIRPATH = (
-            Path(__file__).parent.parent / PARAMS_CONFIGS["files"]["files_dirname"]
-        )
+        FILES_DIRPATH = Path(__file__).parent.parent / PARAMS_CONFIGS["files"]["files_dirname"]
         os.makedirs(FILES_DIRPATH, exist_ok=True)
 
         filepath = FILES_DIRPATH / file.name
@@ -54,9 +48,7 @@ def save_file(file):
             f.write(file.getbuffer())
 
         with st.status(f"Processing `{file.name}` ...", expanded=True) as status:
-            results = ingestion_pipeline(
-                filepath=str(filepath), **PARAMS_CONFIGS["ingestion_pipeline"]
-            )
+            results = ingestion_pipeline(filepath=str(filepath), **PARAMS_CONFIGS["ingestion_pipeline"])
 
             if results:
                 status.update(

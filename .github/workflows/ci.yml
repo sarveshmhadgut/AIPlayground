@@ -33,25 +33,16 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Check code formatting (ruff)
-        run: uvx ruff format --check corrective_rag/ langgraph_utils/ main.py --exclude Flaude
+        run: uvx ruff format --check . --exclude Flaude
 
       - name: Check import sorting (ruff)
-        run: uvx ruff check --select I corrective_rag/ langgraph_utils/ main.py --exclude Flaude
+        run: uvx ruff check --select I . --exclude Flaude
 
       - name: Lint code (ruff)
-        run: uvx ruff check corrective_rag/ langgraph_utils/ main.py --exclude Flaude
-
-      - name: Type check (mypy)
-        run: uvx mypy corrective_rag --explicit-package-bases --ignore-missing-imports
-
-      - name: Run unit tests (pytest)
-        env:
-          GOOGLE_API_KEY: "dummy-key-for-ci"
-          LANGCHAIN_API_KEY: "dummy-key-for-ci"
-        run: uv run pytest corrective_rag/tests
+        run: uvx ruff check . --exclude Flaude
 
       - name: Verify Python bytecode compilation
-        run: python3 -m compileall -q corrective_rag/ langgraph_utils/ main.py
+        run: python3 -m compileall -q langgraph_utils/ main.py 05_goofy_chatbot 07_streaming 08_threading 09_sqlite 10_observability 11_tools 12_rag 13_hitl
 
   check-flaude:
     name: Flaude Submodule

@@ -2,8 +2,6 @@
 main.py: Root entry point for the LanggraphSandbox repository.
 """
 
-__all__: list[str] = ["main"]
-
 
 def main() -> None:
     """Run top-level workspace routines or demonstrations."""
@@ -12,3 +10,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+__all__: list[str] = ["main"]

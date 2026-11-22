@@ -57,8 +57,11 @@ ignore = [
     "E402", # Module level import not at top of file (dynamic sys.path resolution required for standalone execution)
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"*.ipynb" = ["E501"]
+
 [tool.pytest.ini_options]
-testpaths = ["corrective_rag/tests"]
+addopts = "--ignore=Flaude"
 filterwarnings = [
     "ignore::DeprecationWarning",
     "ignore::pytest.PytestRemovedIn10Warning",

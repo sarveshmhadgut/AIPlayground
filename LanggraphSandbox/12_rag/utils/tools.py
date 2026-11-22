@@ -1,20 +1,19 @@
 import os
-import yaml
-import requests
 from pathlib import Path
-from sympy import sympify
+
+import requests
+import yaml
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
-from langchain_core.tools import tool
-from utils.config import get_embeddings
-from langchain_core.runnables import RunnableConfig
-from utils.rag import VECTOR_DB_PATH
 from langchain_community.tools import DuckDuckGoSearchRun
+from langchain_core.runnables import RunnableConfig
+from langchain_core.tools import tool
+from sympy import sympify
+from utils.config import get_embeddings
+from utils.rag import VECTOR_DB_PATH
 
 load_dotenv()
-PARAMS_CONFIGS = yaml.safe_load(
-    (Path(__file__).parent.parent / "configs/params.yaml").read_text()
-)
+PARAMS_CONFIGS = yaml.safe_load((Path(__file__).parent.parent / "configs/params.yaml").read_text())
 EXCHANGE_RATE_KEY = os.getenv("EXCHANGE_RATE_KEY")
 
 
@@ -88,9 +87,7 @@ def file_search(filename: str):
         return {
             "status": "success",
             "filename": filename,
-            "contents": "\n\n".join(contents)
-            if contents
-            else "No matching files found.",
+            "contents": "\n\n".join(contents) if contents else "No matching files found.",
         }
 
     except Exception:

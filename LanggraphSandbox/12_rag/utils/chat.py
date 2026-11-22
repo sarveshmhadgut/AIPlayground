@@ -1,10 +1,10 @@
 import streamlit as st
-from utils.database import save_file
+from langchain_core.messages import AIMessageChunk, HumanMessage, ToolMessage
+from langsmith import get_current_run_tree, traceable
 from src.backend import workflow as llm
-from utils.config import get_runnable_config
 from src.chat_title_generator import generate_title
-from langsmith import traceable, get_current_run_tree
-from langchain_core.messages import HumanMessage, ToolMessage, AIMessageChunk
+from utils.config import get_runnable_config
+from utils.database import save_file
 
 
 def display_messages(messages):
@@ -30,10 +30,7 @@ def stream_chat(user_input, config, stream_mode="messages", status_holder=None):
             yield (
                 content
                 if isinstance(content, str)
-                else "".join(
-                    b.get("text", "") if isinstance(b, dict) else str(b)
-                    for b in content
-                )
+                else "".join(b.get("text", "") if isinstance(b, dict) else str(b) for b in content)
                 if content
                 else ""
             )
@@ -41,9 +38,7 @@ def stream_chat(user_input, config, stream_mode="messages", status_holder=None):
         if isinstance(message_chunk, ToolMessage):
             tool_name = getattr(message_chunk, "name", "tool")
             if status_holder["box"] is None:
-                status_holder["box"] = st.status(
-                    f"Using `{tool_name}` …", expanded=True
-                )
+                status_holder["box"] = st.status(f"Using `{tool_name}` …", expanded=True)
             else:
                 status_holder["box"].update(
                     label=f"Using `{tool_name}` ...",
@@ -74,9 +69,7 @@ def handle_input(user_input, files=None):
         )
 
     thread_id = st.session_state["current_thread"]
-    thread_name = st.session_state["thread_mapping"].get(
-        thread_id, f"Conversation {thread_id[:8]}"
-    )
+    thread_name = st.session_state["thread_mapping"].get(thread_id, f"Conversation {thread_id[:8]}")
 
     run_tree = get_current_run_tree()
     if run_tree:
@@ -112,9 +105,7 @@ def handle_input(user_input, files=None):
             conversation_history=st.session_state["messages"][:2],
         )
 
-        st.session_state["thread_mapping"][st.session_state["current_thread"]] = (
-            new_title
-        )
+        st.session_state["thread_mapping"][st.session_state["current_thread"]] = new_title
         need_rerun = True
 
     return need_rerun

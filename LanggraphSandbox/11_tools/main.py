@@ -1,4 +1,5 @@
 import sys
+
 from streamlit.web import cli
 
 if __name__ == "__main__":

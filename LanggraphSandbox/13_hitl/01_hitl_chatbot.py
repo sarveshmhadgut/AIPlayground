@@ -2,7 +2,7 @@
 import os
 import sqlite3
 from pathlib import Path
-from typing import Annotated, List, TypedDict
+from typing import Annotated, TypedDict
 from uuid import uuid1
 
 import yaml
@@ -37,7 +37,7 @@ bound_model = model.bind_tools(available_tools)
 
 # State
 class ToolState(TypedDict):
-    messages: Annotated[List, add_messages]
+    messages: Annotated[list, add_messages]
 
 
 # Node & Utility Functions
@@ -66,9 +66,7 @@ def chat(state: ToolState, config):
 
 @traceable(name="approve_tool")
 def approve_tools(state: ToolState):
-    required_tools = [
-        tool_call["name"] for tool_call in state["messages"][-1].tool_calls
-    ]
+    required_tools = [tool_call["name"] for tool_call in state["messages"][-1].tool_calls]
 
     approved = interrupt(
         {
@@ -123,9 +121,7 @@ graph.add_node("tools", tools)
 # Add Edges
 graph.add_edge(START, "set_system_instructions")
 graph.add_edge("set_system_instructions", "chat")
-graph.add_conditional_edges(
-    "chat", tools_condition, {END: END, "tools": "approve_tools"}
-)
+graph.add_conditional_edges("chat", tools_condition, {END: END, "tools": "approve_tools"})
 
 graph.add_edge("approve_tools", "tools")
 graph.add_edge("tools", "chat")
@@ -157,7 +153,11 @@ config = RunnableConfig(
 )
 
 # Execution
-user_query = "Convert 500 GBP to INR using the latest exchange rate. Find the current prices of both the Apple Polishing Cloth and the Apple AirTag in India. Then calculate how many of each I could buy with the converted amount and tell me which gives me the higher quantity."
+user_query = (
+    "Convert 500 GBP to INR using the latest exchange rate. Find the current prices of both "
+    "the Apple Polishing Cloth and the Apple AirTag in India. Then calculate how many of each "
+    "I could buy with the converted amount and tell me which gives me the higher quantity."
+)
 
 final_state = invoke_with_hitl(
     input_={"messages": [HumanMessage(content=user_query)]},
